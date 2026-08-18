@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
+
   const saveSession = (data) => {
     localStorage.setItem("farmtrackToken", data.token);
     localStorage.setItem("farmtrackUser", JSON.stringify(data.user));
