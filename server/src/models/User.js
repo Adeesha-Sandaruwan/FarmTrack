@@ -3,6 +3,12 @@ const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
+    farmName: {
+      type: String,
+      trim: true,
+      minlength: [2, "Farm / flock name must be at least 2 characters"],
+      maxlength: [100, "Farm / flock name cannot exceed 100 characters"],
+    },
     name: {
       type: String,
       required: [true, "Name is required"],
@@ -16,6 +22,15 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+    },
+    phoneNumber: {
+      type: String,
+      trim: true,
+      maxlength: [25, "Phone number cannot exceed 25 characters"],
+    },
+    flockSize: {
+      type: String,
+      enum: ["under-500", "500-2000", "2000-10000", "over-10000"],
     },
     password: {
       type: String,
@@ -54,6 +69,7 @@ userSchema.pre("save", async function () {
   const salt = await bcrypt.genSalt(12);
   this.password = await bcrypt.hash(this.password, salt);
 });
+
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return bcrypt.compare(enteredPassword, this.password);
 };

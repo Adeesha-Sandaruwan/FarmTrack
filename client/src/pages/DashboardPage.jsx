@@ -12,29 +12,39 @@ const DashboardPage = () => {
 
   return (
     <main className="dashboard">
-      <div className="dashboard-card">
-        <h1>Welcome to FarmTrack</h1>
+      <section className="dashboard-card">
+        <p className="brand-name dashboard-brand">FarmTrack</p>
+        <h1>Welcome, {user?.name}</h1>
+
         <p>
-          Signed in as <strong>{user?.name}</strong>
-        </p>
-        <p>
-          Role: <span className="role-badge">{user?.role}</span>
+          {user?.farmName
+            ? `You are managing ${user.farmName}.`
+            : "Your FarmTrack account is ready."}
         </p>
 
-        <h2>Authentication complete</h2>
-        <p>
-          Your account is connected to the FarmTrack API and MongoDB database.
-        </p>
-
-        {user?.role === "admin" && (
-          <p className="admin-note">
-            As an administrator, you can use the user-management API to create
-            and manage managers and workers.
+        <div className="dashboard-details">
+          <p>
+            <strong>Email:</strong> {user?.email}
           </p>
-        )}
+          <p>
+            <strong>Role:</strong>{" "}
+            <span className="role-badge">{user?.role}</span>
+          </p>
+          {user?.flockSize && (
+            <p>
+              <strong>Flock size:</strong> {user.flockSize}
+            </p>
+          )}
+        </div>
+
+        <h2>Your dashboard is ready</h2>
+        <p>
+          Flock, feed, production, health, finance, and analytics modules will
+          be added here next.
+        </p>
 
         <button onClick={handleLogout}>Sign out</button>
-      </div>
+      </section>
     </main>
   );
 };

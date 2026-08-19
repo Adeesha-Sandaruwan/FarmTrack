@@ -2,6 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+const features = [
+  ["Flock Management", "Track batches, population, and mortality"],
+  ["Feed & Inventory", "Monitor stock levels and usage"],
+  ["Production & Health", "Record eggs, weights, and vaccinations"],
+  ["Finance & Analytics", "View sales, expenses, and profit"],
+];
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -13,13 +20,6 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const handleChange = (event) => {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
@@ -28,104 +28,75 @@ const LoginPage = () => {
     try {
       await login(formData);
       navigate("/dashboard");
-    } catch (requestError) {
-      setError(
-        requestError.response?.data?.message ||
-          "Login failed. Please try again."
-      );
+    } catch {
+      setError("Invalid email or password. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <main className="auth-shell">
-      <div className="auth-atmosphere" aria-hidden="true">
-        <span className="mist mist-left" />
-        <span className="mist mist-right" />
-        <span className="mist mist-bottom" />
-        <span className="leaf-haze leaf-haze-left" />
-        <span className="leaf-haze leaf-haze-right" />
-      </div>
+    <main className="auth-layout">
+      <section className="brand-panel">
+        <p className="brand-name">FarmTrack</p>
+        <h1>Every layer tells a story</h1>
+        <p className="brand-description">
+          Replace disconnected spreadsheets with reliable digital records
+          across flock, inventory, health, and finances.
+        </p>
 
-      <header className="auth-topbar">
-        <span className="brand-mark">farmtrack</span>
-        <nav className="pill-nav" aria-label="Primary">
-          <a href="#">Home</a>
-          <a href="#">About Us</a>
-          <a href="#">Contact Us</a>
-          <a href="#">Farm Journal</a>
-        </nav>
-        <button type="button" className="menu-pill">
-          coop menu
-        </button>
-      </header>
+        <div className="feature-grid">
+          {features.map(([title, description]) => (
+            <article className="feature-card" key={title}>
+              <h2>{title}</h2>
+              <p>{description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
-      <section className="auth-stage">
-        <article className="auth-story">
-          <h1 className="story-title">
-            <span className="story-script">Every layer</span>
-            <span className="story-sans">tells a story</span>
-          </h1>
-          <p className="story-caption">
-            Turn flock records, feed cycles, and coop activity into clear daily
-            decisions.
-          </p>
-          <div className="farm-highlights">
-            <span>Flock health timeline</span>
-            <span>Feed and water alerts</span>
-            <span>Egg and weight insights</span>
-          </div>
-          <div className="story-metrics">
-            <article>
-              <strong>24/7</strong>
-              <span>Coop monitoring</span>
-            </article>
-            <article>
-              <strong>98%</strong>
-              <span>Task completion</span>
-            </article>
-            <article>
-              <strong>6 zones</strong>
-              <span>Farm sections synced</span>
-            </article>
-          </div>
-          <div className="organic-ridge" aria-hidden="true" />
-        </article>
-
-        <form className="auth-panel" onSubmit={handleSubmit}>
-          <h2>Welcome back</h2>
-          <p className="panel-subtitle">Sign in to continue to FarmTrack.</p>
+      <section className="form-panel">
+        <form className="auth-card" onSubmit={handleSubmit}>
+          <h1>Sign in</h1>
+          <p>Access your FarmTrack dashboard.</p>
 
           {error && <p className="error-message">{error}</p>}
 
-          <label className="field-label">
+          <label>
             Email
             <input
               type="email"
               name="email"
+              placeholder="Enter your farm email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={(event) =>
+                setFormData({ ...formData, email: event.target.value })
+              }
               required
             />
           </label>
 
-          <label className="field-label">
+          <label>
             Password
             <input
               type="password"
               name="password"
+              placeholder="Enter your password"
               value={formData.password}
-              onChange={handleChange}
+              onChange={(event) =>
+                setFormData({ ...formData, password: event.target.value })
+              }
               required
             />
           </label>
 
-          <button type="submit" className="auth-button" disabled={submitting}>
+          <p className="text-link">Forgot password? Coming soon.</p>
+
+          <button type="submit" disabled={submitting}>
             {submitting ? "Signing in..." : "Sign in"}
           </button>
 
-          <p className="switch-text">
+          <p className="form-footer">
             Need an account? <Link to="/register">Register here</Link>
           </p>
         </form>

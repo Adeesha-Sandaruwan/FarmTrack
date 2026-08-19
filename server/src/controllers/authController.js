@@ -4,8 +4,11 @@ const generateToken = require("../utils/generateToken");
 
 const userResponse = (user) => ({
   id: user._id,
+  farmName: user.farmName,
   name: user.name,
   email: user.email,
+  phoneNumber: user.phoneNumber,
+  flockSize: user.flockSize,
   role: user.role,
   farm: user.farm,
   isActive: user.isActive,
@@ -21,10 +24,8 @@ const sendAuthResponse = (res, statusCode, user, message) => {
   });
 };
 
-// POST /api/auth/register
-// Public registrations always become workers for security.
 const register = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { farmName, name, email, phoneNumber, flockSize, password } = req.body;
 
   const existingUser = await User.findOne({ email });
 
@@ -34,8 +35,11 @@ const register = asyncHandler(async (req, res) => {
   }
 
   const user = await User.create({
+    farmName,
     name,
     email,
+    phoneNumber,
+    flockSize,
     password,
     role: "worker",
   });
@@ -43,7 +47,6 @@ const register = asyncHandler(async (req, res) => {
   sendAuthResponse(res, 201, user, "Registration successful.");
 });
 
-// POST /api/auth/login
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -62,7 +65,6 @@ const login = asyncHandler(async (req, res) => {
   sendAuthResponse(res, 200, user, "Login successful.");
 });
 
-// GET /api/auth/me
 const getMe = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,

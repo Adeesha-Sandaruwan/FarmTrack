@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-
   const saveSession = (data) => {
     localStorage.setItem("farmtrackToken", data.token);
     localStorage.setItem("farmtrackUser", JSON.stringify(data.user));
@@ -18,7 +17,6 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (formData) => {
     const { data } = await api.post("/auth/register", formData);
-    saveSession(data);
     return data;
   };
 
@@ -41,5 +39,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
