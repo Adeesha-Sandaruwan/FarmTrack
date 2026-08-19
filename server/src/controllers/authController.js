@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Farm = require("../models/Farm");
 const asyncHandler = require("../utils/asyncHandler");
 const generateToken = require("../utils/generateToken");
 
@@ -43,6 +44,15 @@ const register = asyncHandler(async (req, res) => {
     password,
     role: "worker",
   });
+
+  const farm = await Farm.create({
+    name: farmName,
+    owner: user._id,
+    phoneNumber,
+  });
+
+  user.farm = farm._id;
+  await user.save();
 
   sendAuthResponse(res, 201, user, "Registration successful.");
 });
