@@ -1,33 +1,46 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const RegisterPage = () => {
-  const navigate = useNavigate();
   const { register } = useAuth();
 
   const [formData, setFormData] = useState({
+    farmName: "",
     name: "",
     email: "",
+    phoneNumber: "",
+    flockSize: "",
     password: "",
     confirmPassword: "",
+    acceptedTerms: false,
   });
+
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
+
     setFormData({
       ...formData,
-      [event.target.name]: event.target.value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
+    setSuccess("");
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
+      return;
+    }
+
+    if (!formData.acceptedTerms) {
+      setError("You must agree to the Terms of Service and Privacy Policy.");
       return;
     }
 
@@ -35,12 +48,17 @@ const RegisterPage = () => {
 
     try {
       await register({
+        farmName: formData.farmName,
         name: formData.name,
         email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        flockSize: formData.flockSize,
         password: formData.password,
       });
 
-      navigate("/dashboard");
+      setSuccess(
+        "Registration successful! You can now log in to manage your flock records, inventory, health, and finances."
+      );
     } catch (requestError) {
       setError(
         requestError.response?.data?.message ||
@@ -52,94 +70,99 @@ const RegisterPage = () => {
   };
 
   return (
-    <main className="auth-shell">
-      <div className="auth-atmosphere" aria-hidden="true">
-        <span className="mist mist-left" />
-        <span className="mist mist-right" />
-        <span className="mist mist-bottom" />
-        <span className="leaf-haze leaf-haze-left" />
-        <span className="leaf-haze leaf-haze-right" />
-      </div>
+    <main className="auth-layout register-layout">
+      <section className="brand-panel">
+        <p className="brand-name">FarmTrack</p>
+        <h1>Create your FarmTrack account</h1>
+        <p className="brand-description">
+          Set up your farm profile to start managing flocks, inventory,
+          production, and finances.
+        </p>
+      </section>
 
-      <header className="auth-topbar">
-        <span className="brand-mark">farmtrack</span>
-        <nav className="pill-nav" aria-label="Primary">
-          <a href="#">Home</a>
-          <a href="#">About Us</a>
-          <a href="#">Contact Us</a>
-          <a href="#">Farm Journal</a>
-        </nav>
-        <button type="button" className="menu-pill">
-          coop menu
-        </button>
-      </header>
-
-      <section className="auth-stage">
-        <article className="auth-story">
-          <h1 className="story-title">
-            <span className="story-script">Build your team</span>
-            <span className="story-sans">for every season</span>
-          </h1>
-          <p className="story-caption">
-            Add your farm team, assign barn responsibilities, and keep every
-            chicken-care routine on schedule.
-          </p>
-          <div className="farm-highlights">
-            <span>Role-based worker access</span>
-            <span>Vaccination reminders</span>
-            <span>Broiler and layer tracking</span>
-          </div>
-          <div className="story-metrics">
-            <article>
-              <strong>1 dashboard</strong>
-              <span>All barns connected</span>
-            </article>
-            <article>
-              <strong>Daily</strong>
-              <span>Health and feed logs</span>
-            </article>
-            <article>
-              <strong>Fast setup</strong>
-              <span>Ready in minutes</span>
-            </article>
-          </div>
-          <div className="organic-ridge" aria-hidden="true" />
-        </article>
-
-        <form className="auth-panel" onSubmit={handleSubmit}>
-          <h2>Create account</h2>
-          <p className="panel-subtitle">Set up your worker profile securely.</p>
+      <section className="form-panel">
+        <form className="auth-card" onSubmit={handleSubmit}>
+          <h1>Create your FarmTrack account</h1>
 
           {error && <p className="error-message">{error}</p>}
 
-          <label className="field-label">
-            Full name
+          {success && (
+            <div className="success-message">
+              <p>{success}</p>
+              <Link to="/login">Sign in here</Link>
+            </div>
+          )}
+
+          <label>
+            Farm / Flock Name
             <input
               type="text"
-              name="name"
-              value={formData.name}
+              name="farmName"
+              placeholder="e.g., Green Valley Layers"
+              value={formData.farmName}
               onChange={handleChange}
-              minLength="2"
               required
             />
           </label>
 
-          <label className="field-label">
-            Email
+          <label>
+            Full Name
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your full name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <label>
+            Email Address
             <input
               type="email"
               name="email"
+              placeholder="Enter your email address"
               value={formData.email}
               onChange={handleChange}
               required
             />
           </label>
 
-          <label className="field-label">
+          <label>
+            Phone Number
+            <input
+              type="tel"
+              name="phoneNumber"
+              placeholder="Enter your phone number"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <label>
+            Flock Size
+            <select
+              name="flockSize"
+              value={formData.flockSize}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select your flock size</option>
+              <option value="under-500">Under 500 hens</option>
+              <option value="500-2000">500 – 2,000 hens</option>
+              <option value="2000-10000">2,000 – 10,000 hens</option>
+              <option value="over-10000">Over 10,000 hens</option>
+            </select>
+          </label>
+
+          <label>
             Password
             <input
               type="password"
               name="password"
+              placeholder="Create a password (min. 8 characters)"
               value={formData.password}
               onChange={handleChange}
               minLength="8"
@@ -147,11 +170,12 @@ const RegisterPage = () => {
             />
           </label>
 
-          <label className="field-label">
-            Confirm password
+          <label>
+            Confirm Password
             <input
               type="password"
               name="confirmPassword"
+              placeholder="Re-enter your password"
               value={formData.confirmPassword}
               onChange={handleChange}
               minLength="8"
@@ -159,12 +183,24 @@ const RegisterPage = () => {
             />
           </label>
 
-          <button type="submit" className="auth-button" disabled={submitting}>
-            {submitting ? "Creating account..." : "Register"}
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              name="acceptedTerms"
+              checked={formData.acceptedTerms}
+              onChange={handleChange}
+            />
+            <span>
+              I agree to the Terms of Service and Privacy Policy.
+            </span>
+          </label>
+
+          <button type="submit" disabled={submitting || Boolean(success)}>
+            {submitting ? "Creating account..." : "Create My Farm Dashboard"}
           </button>
 
-          <p className="switch-text">
-            Already registered? <Link to="/login">Sign in</Link>
+          <p className="form-footer">
+            Already have an account? <Link to="/login">Sign in here</Link>
           </p>
         </form>
       </section>
