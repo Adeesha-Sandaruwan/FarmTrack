@@ -42,7 +42,7 @@ const register = asyncHandler(async (req, res) => {
     phoneNumber,
     flockSize,
     password,
-    role: "worker",
+    role: "manager",
   });
 
   const farm = await Farm.create({
