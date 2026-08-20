@@ -139,6 +139,7 @@ button {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.1);
   box-shadow: 0 12px 25px rgba(0, 28, 11, 0.08);
+  -webkit-backdrop-filter: blur(7px);
   backdrop-filter: blur(7px);
   transition:
     transform 0.2s ease,
@@ -505,5 +506,435 @@ button:disabled {
   *::after {
     scroll-behavior: auto !important;
     transition: none !important;
+  }
+}
+
+/* ---------- Farm dashboard and flock management ---------- */
+
+.farm-dashboard {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 250px minmax(0, 1fr);
+  background: #f5f8f4;
+}
+
+.dashboard-sidebar {
+  display: flex;
+  position: sticky;
+  top: 0;
+  flex-direction: column;
+  height: 100vh;
+  padding: 28px 16px;
+  color: #eaf5ec;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(112, 183, 109, 0.18), transparent 28%),
+    #133e27;
+}
+
+.sidebar-brand {
+  padding: 0 12px 32px;
+  color: #ffffff;
+  font-family: "Playfair Display", serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.sidebar-nav {
+  display: grid;
+  gap: 5px;
+}
+
+.sidebar-nav a,
+.sidebar-nav span {
+  padding: 12px;
+  border-radius: 9px;
+  color: #b9cfbe;
+  font-size: 0.93rem;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-nav span {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.sidebar-user {
+  display: grid;
+  gap: 5px;
+  margin-top: auto;
+  padding: 18px 12px 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.sidebar-user strong {
+  color: #ffffff;
+  font-size: 0.92rem;
+}
+
+.sidebar-user span {
+  color: #a8c4af;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.sidebar-user button {
+  width: fit-content;
+  min-height: 0;
+  margin-top: 10px;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #bdd6c2;
+  font-size: 0.84rem;
+  text-align: left;
+}
+
+.dashboard-content {
+  width: min(100%, 1440px);
+  padding: clamp(28px, 4vw, 58px);
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.dashboard-header h1,
+.overview-hero h2,
+.panel-heading h2 {
+  margin: 4px 0 8px;
+  color: #143d25;
+  font-family: "Playfair Display", serif;
+  letter-spacing: -0.035em;
+}
+
+.dashboard-header h1 {
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+}
+
+.dashboard-header p {
+  margin: 0;
+  color: #687a6d;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #218047;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.refresh-button {
+  width: auto;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 17px;
+  border: 1px solid #cfe0d1;
+  background: #ffffff;
+  box-shadow: none;
+  color: #1a663a;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.summary-card {
+  display: grid;
+  gap: 9px;
+  min-height: 128px;
+  padding: 22px;
+  border: 1px solid #e1ebe1;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(20, 67, 36, 0.05);
+}
+
+.summary-card span {
+  color: #718075;
+  font-size: 0.88rem;
+}
+
+.summary-card strong {
+  color: #133e27;
+  font-size: clamp(1.75rem, 3vw, 2.45rem);
+}
+
+.mortality-card strong {
+  color: #b4513c;
+}
+
+.management-panel,
+.overview-hero {
+  margin-top: 24px;
+  padding: clamp(22px, 3vw, 32px);
+  border: 1px solid #e0eae1;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(20, 67, 36, 0.04);
+}
+
+.overview-hero {
+  max-width: 800px;
+  background:
+    linear-gradient(135deg, rgba(16, 91, 46, 0.96), rgba(35, 123, 65, 0.9)),
+    url("https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=1200&q=80")
+      center / cover;
+  color: #ffffff;
+}
+
+.overview-hero h2 {
+  max-width: 540px;
+  color: #ffffff;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.overview-hero p:not(.eyebrow) {
+  max-width: 560px;
+  line-height: 1.65;
+  opacity: 0.9;
+}
+
+.overview-hero .eyebrow {
+  color: #d5efb9;
+}
+
+.primary-link {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 13px 17px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #155e32;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.panel-heading h2 {
+  font-size: 1.65rem;
+}
+
+.role-note {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #eff7ef;
+  color: #39704a;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.flock-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 16px;
+}
+
+.flock-form label {
+  margin-top: 14px;
+}
+
+.form-wide {
+  grid-column: 1 / -1;
+}
+
+.flock-form button {
+  margin-top: 24px;
+}
+
+.flock-table-wrap {
+  overflow-x: auto;
+}
+
+.flock-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.flock-table th {
+  padding: 0 14px 13px;
+  border-bottom: 1px solid #e3ebe3;
+  color: #78877b;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.flock-table td {
+  padding: 17px 14px;
+  border-bottom: 1px solid #edf2ed;
+  color: #405145;
+  font-size: 0.9rem;
+}
+
+.flock-table td strong,
+.flock-table td span {
+  display: block;
+}
+
+.flock-table td strong {
+  color: #1f3928;
+}
+
+.flock-table td span {
+  margin-top: 4px;
+  color: #839186;
+  font-size: 0.79rem;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.status-badge {
+  display: inline-block !important;
+  width: fit-content;
+  margin: 0 !important;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 0.76rem !important;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status-badge.active {
+  background: #e2f3e5;
+  color: #24693a;
+}
+
+.status-badge.closed {
+  background: #f0f0ed;
+  color: #697069;
+}
+
+.status-badge.sold {
+  background: #fff0dc;
+  color: #a1651b;
+}
+
+.table-action {
+  width: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #eff7f0;
+  box-shadow: none;
+  color: #1a6538;
+  font-size: 0.78rem;
+}
+
+.loading-text,
+.empty-state {
+  padding: 34px 12px;
+  color: #728075;
+  text-align: center;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px;
+  color: #264131;
+}
+
+.empty-state p {
+  margin: 0;
+}
+
+/* Dashboard mobile layout */
+
+@media (max-width: 1100px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .flock-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .farm-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-sidebar {
+    position: static;
+    height: auto;
+    padding: 18px;
+  }
+
+  .sidebar-brand {
+    padding: 0 0 14px;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 3px;
+  }
+
+  .sidebar-nav a,
+  .sidebar-nav span {
+    flex: 0 0 auto;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+
+  .sidebar-user {
+    display: none;
+  }
+
+  .dashboard-content {
+    padding: 28px 16px;
+  }
+
+  .dashboard-header {
+    display: grid;
+    gap: 18px;
+  }
+
+  .refresh-button {
+    width: 100%;
+  }
+
+  .summary-grid,
+  .flock-form {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .management-panel {
+    padding: 20px 16px;
+    border-radius: 14px;
   }
 }
