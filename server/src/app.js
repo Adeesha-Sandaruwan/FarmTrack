@@ -2,10 +2,11 @@ const express = require("express");
 const cors = require("cors");
 
 const authRoutes = require("./routes/authRoutes");
-const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const userRoutes = require("./routes/userRoutes");
 const farmRoutes = require("./routes/farmRoutes");
+const flockRoutes = require("./routes/flockRoutes");
 
+const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const app = express();
 
@@ -23,9 +24,11 @@ app.get("/api/health", (req, res) => {
     message: "FarmTrack API is running",
   });
 });
-app.use("/api/users", userRoutes);
+
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/farms", farmRoutes);
+app.use("/api/flocks", flockRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
