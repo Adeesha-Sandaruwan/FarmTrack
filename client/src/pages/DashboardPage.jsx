@@ -23,7 +23,7 @@ const DashboardPage = () => {
           </Link>
           <Link to="/flocks">Flock Management</Link>
           <span>Feed & Inventory</span>
-          <span>Production & Health</span>
+          <Link to="/production-health">Production & Health</Link>
           <span>Finance & Analytics</span>
         </nav>
 
