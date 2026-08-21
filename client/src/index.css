@@ -937,4 +937,10 @@ button:disabled {
     padding: 20px 16px;
     border-radius: 14px;
   }
+
+  .low-stock-text {
+  color: #b4513c !important;
+  font-weight: 700;
+}
+
 }

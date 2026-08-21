@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
 import FlocksPage from "./pages/FlocksPage";
+import InventoryPage from "./pages/InventoryPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 
@@ -15,6 +16,7 @@ const App = () => {
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/flocks" element={<FlocksPage />} />
+        <Route path="/inventory" element={<InventoryPage />} />
       </Route>
 
       <Route path="/" element={<Navigate to="/dashboard" replace />} />

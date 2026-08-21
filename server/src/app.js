@@ -5,7 +5,7 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const farmRoutes = require("./routes/farmRoutes");
 const flockRoutes = require("./routes/flockRoutes");
-
+const inventoryRoutes = require("./routes/inventoryRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const app = express();
@@ -29,6 +29,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/farms", farmRoutes);
 app.use("/api/flocks", flockRoutes);
+app.use("/api/inventory", inventoryRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
