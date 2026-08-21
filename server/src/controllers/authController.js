@@ -25,8 +25,16 @@ const sendAuthResponse = (res, statusCode, user, message) => {
   });
 };
 
+// POST /api/auth/register
 const register = asyncHandler(async (req, res) => {
-  const { farmName, name, email, phoneNumber, flockSize, password } = req.body;
+  const {
+    farmName,
+    name,
+    email,
+    phoneNumber,
+    flockSize,
+    password,
+  } = req.body;
 
   const existingUser = await User.findOne({ email });
 
@@ -35,6 +43,7 @@ const register = asyncHandler(async (req, res) => {
     throw new Error("An account with this email already exists.");
   }
 
+  // The person who creates a farm becomes its manager.
   const user = await User.create({
     farmName,
     name,
@@ -54,9 +63,15 @@ const register = asyncHandler(async (req, res) => {
   user.farm = farm._id;
   await user.save();
 
-  sendAuthResponse(res, 201, user, "Registration successful.");
+  sendAuthResponse(
+    res,
+    201,
+    user,
+    "Registration successful. Your farm dashboard is ready."
+  );
 });
 
+// POST /api/auth/login
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -75,6 +90,7 @@ const login = asyncHandler(async (req, res) => {
   sendAuthResponse(res, 200, user, "Login successful.");
 });
 
+// GET /api/auth/me
 const getMe = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
