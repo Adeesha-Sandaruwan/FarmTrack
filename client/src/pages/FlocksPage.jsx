@@ -61,7 +61,34 @@ const FlocksPage = () => {
   };
 
   useEffect(() => {
-    loadFlocks();
+    let isCancelled = false;
+
+    const loadInitialFlocks = async () => {
+      try {
+        const { data } = await api.get("/flocks");
+
+        if (!isCancelled) {
+          setFlocks(data.flocks);
+        }
+      } catch (requestError) {
+        if (!isCancelled) {
+          setPageError(
+            requestError.response?.data?.message ||
+              "Unable to load flock records. Please try again."
+          );
+        }
+      } finally {
+        if (!isCancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadInitialFlocks();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   const summary = useMemo(() => {
@@ -173,10 +200,13 @@ const FlocksPage = () => {
 
         <nav className="sidebar-nav">
           <Link to="/dashboard">Overview</Link>
+
           <Link className="active" to="/flocks">
             Flock Management
           </Link>
-          <span>Feed & Inventory</span>
+
+          <Link to="/inventory">Feed & Inventory</Link>
+
           <span>Production & Health</span>
           <span>Finance & Analytics</span>
         </nav>
@@ -184,6 +214,7 @@ const FlocksPage = () => {
         <div className="sidebar-user">
           <strong>{user?.name}</strong>
           <span>{user?.role}</span>
+
           <button type="button" onClick={handleLogout}>
             Sign out
           </button>
@@ -212,14 +243,17 @@ const FlocksPage = () => {
             <span>Total batches</span>
             <strong>{summary.totalFlocks}</strong>
           </article>
+
           <article className="summary-card">
             <span>Active flocks</span>
             <strong>{summary.activeFlocks}</strong>
           </article>
+
           <article className="summary-card">
             <span>Current population</span>
             <strong>{formatNumber(summary.totalPopulation)}</strong>
           </article>
+
           <article className="summary-card mortality-card">
             <span>Recorded mortality</span>
             <strong>{formatNumber(summary.totalMortality)}</strong>
@@ -233,6 +267,7 @@ const FlocksPage = () => {
                 <p className="eyebrow">New batch</p>
                 <h2>Add a flock</h2>
               </div>
+
               <span className="role-note">Manager / Admin access</span>
             </div>
 
@@ -334,6 +369,7 @@ const FlocksPage = () => {
               <p className="eyebrow">Live records</p>
               <h2>Flock batches</h2>
             </div>
+
             <span className="role-note">{flocks.length} records</span>
           </div>
 
@@ -361,6 +397,7 @@ const FlocksPage = () => {
                     <th />
                   </tr>
                 </thead>
+
                 <tbody>
                   {flocks.map((flock) => (
                     <tr key={flock._id}>
@@ -368,24 +405,29 @@ const FlocksPage = () => {
                         <strong>{flock.batchCode}</strong>
                         <span>{flock.source || "No source recorded"}</span>
                       </td>
+
                       <td>
                         <strong>{flock.breed}</strong>
                         <span className="capitalize">{flock.flockType}</span>
                       </td>
+
                       <td>
                         <strong>{formatNumber(flock.currentPopulation)}</strong>
                         <span>
                           of {formatNumber(flock.initialPopulation)} birds
                         </span>
                       </td>
+
                       <td>
                         <span className={`status-badge ${flock.status}`}>
                           {flock.status}
                         </span>
                       </td>
+
                       <td>
                         {new Date(flock.placementDate).toLocaleDateString()}
                       </td>
+
                       <td>
                         {flock.status === "active" && (
                           <button
@@ -411,10 +453,11 @@ const FlocksPage = () => {
               <p className="eyebrow">Daily operation</p>
               <h2>Record mortality</h2>
             </div>
+
             <span className="role-note">Available to all farm users</span>
           </div>
 
-          <form className="flock-form mortality-form" onSubmit={handleCreateMortality}>
+          <form className="flock-form" onSubmit={handleCreateMortality}>
             <label>
               Flock batch
               <select
@@ -424,6 +467,7 @@ const FlocksPage = () => {
                 required
               >
                 <option value="">Select an active flock</option>
+
                 {flocks
                   .filter((flock) => flock.status === "active")
                   .map((flock) => (
@@ -483,7 +527,9 @@ const FlocksPage = () => {
               type="submit"
               disabled={creatingMortality}
             >
-              {creatingMortality ? "Saving record..." : "Save mortality record"}
+              {creatingMortality
+                ? "Saving record..."
+                : "Save mortality record"}
             </button>
           </form>
         </section>
