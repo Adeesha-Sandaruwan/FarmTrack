@@ -16,7 +16,7 @@ const productionRecordSchema = new mongoose.Schema(
     },
     date: {
       type: Date,
-      required: true,
+      required: [true, "Record date is required"],
     },
     eggCount: {
       type: Number,
@@ -50,6 +50,9 @@ const productionRecordSchema = new mongoose.Schema(
   }
 );
 
-productionRecordSchema.index({ farm: 1, flock: 1, date: 1 }, { unique: true });
+productionRecordSchema.index(
+  { farm: 1, flock: 1, date: 1 },
+  { unique: true }
+);
 
 module.exports = mongoose.model("ProductionRecord", productionRecordSchema);

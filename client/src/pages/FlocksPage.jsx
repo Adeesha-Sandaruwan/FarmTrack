@@ -207,6 +207,10 @@ const FlocksPage = () => {
 
           <Link to="/inventory">Feed & Inventory</Link>
 
+          {user?.role === "admin" && (
+  <Link to="/users">User Management</Link>
+)}
+
           <span>Production & Health</span>
           <span>Finance & Analytics</span>
         </nav>

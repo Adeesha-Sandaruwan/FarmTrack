@@ -21,18 +21,24 @@ router
   .post(
     [
       body("flock").isMongoId().withMessage("A valid flock is required."),
-      body("date").isISO8601().withMessage("A valid date is required."),
+
+      body("date")
+        .isISO8601()
+        .withMessage("A valid date is required."),
+
       body("eggCount")
         .isInt({ min: 0 })
         .withMessage("Egg count cannot be negative."),
+
       body("damagedEggs")
         .optional()
         .isInt({ min: 0 })
         .withMessage("Damaged eggs cannot be negative."),
+
       body("averageBirdWeight")
         .optional()
         .isFloat({ min: 0 })
-        .withMessage("Weight cannot be negative."),
+        .withMessage("Average bird weight cannot be negative."),
     ],
     validateRequest,
     createProductionRecord
@@ -43,10 +49,25 @@ router
   .patch(
     authorize("admin", "manager"),
     [
-      body("date").optional().isISO8601().withMessage("A valid date is required."),
-      body("eggCount").optional().isInt({ min: 0 }),
-      body("damagedEggs").optional().isInt({ min: 0 }),
-      body("averageBirdWeight").optional().isFloat({ min: 0 }),
+      body("date")
+        .optional()
+        .isISO8601()
+        .withMessage("A valid date is required."),
+
+      body("eggCount")
+        .optional()
+        .isInt({ min: 0 })
+        .withMessage("Egg count cannot be negative."),
+
+      body("damagedEggs")
+        .optional()
+        .isInt({ min: 0 })
+        .withMessage("Damaged eggs cannot be negative."),
+
+      body("averageBirdWeight")
+        .optional()
+        .isFloat({ min: 0 })
+        .withMessage("Average bird weight cannot be negative."),
     ],
     validateRequest,
     updateProductionRecord

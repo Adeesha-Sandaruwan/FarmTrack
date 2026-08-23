@@ -11,10 +11,6 @@ const getFarmId = (req, res) => {
   return req.user.farm;
 };
 
-const findFlock = (flockId, farmId) =>
-  Flock.findOne({ _id: flockId, farm: farmId });
-
-// GET /api/health-records
 const getHealthRecords = asyncHandler(async (req, res) => {
   const farmId = getFarmId(req, res);
   const query = { farm: farmId };
@@ -39,10 +35,13 @@ const getHealthRecords = asyncHandler(async (req, res) => {
   });
 });
 
-// POST /api/health-records
 const createHealthRecord = asyncHandler(async (req, res) => {
   const farmId = getFarmId(req, res);
-  const flock = await findFlock(req.body.flock, farmId);
+
+  const flock = await Flock.findOne({
+    _id: req.body.flock,
+    farm: farmId,
+  });
 
   if (!flock) {
     res.status(404);
@@ -71,7 +70,6 @@ const createHealthRecord = asyncHandler(async (req, res) => {
   });
 });
 
-// PATCH /api/health-records/:id
 const updateHealthRecord = asyncHandler(async (req, res) => {
   const farmId = getFarmId(req, res);
 
@@ -85,7 +83,7 @@ const updateHealthRecord = asyncHandler(async (req, res) => {
     throw new Error("Health record not found.");
   }
 
-  const fields = [
+  const allowedFields = [
     "recordType",
     "title",
     "date",
@@ -97,7 +95,7 @@ const updateHealthRecord = asyncHandler(async (req, res) => {
     "nextDueDate",
   ];
 
-  fields.forEach((field) => {
+  allowedFields.forEach((field) => {
     if (Object.prototype.hasOwnProperty.call(req.body, field)) {
       record[field] = req.body[field];
     }
@@ -112,7 +110,6 @@ const updateHealthRecord = asyncHandler(async (req, res) => {
   });
 });
 
-// DELETE /api/health-records/:id
 const deleteHealthRecord = asyncHandler(async (req, res) => {
   const farmId = getFarmId(req, res);
 

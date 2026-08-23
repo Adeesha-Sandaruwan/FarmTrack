@@ -24,14 +24,34 @@ router
   .post(
     [
       body("flock").isMongoId().withMessage("A valid flock is required."),
+
       body("recordType")
         .isIn(recordTypes)
         .withMessage("Please select a valid health record type."),
-      body("title").trim().notEmpty().withMessage("Record title is required."),
-      body("date").isISO8601().withMessage("A valid date is required."),
-      body("severity").optional().isIn(severities),
-      body("quantity").optional().isFloat({ min: 0 }),
-      body("nextDueDate").optional().isISO8601(),
+
+      body("title")
+        .trim()
+        .notEmpty()
+        .withMessage("Record title is required."),
+
+      body("date")
+        .isISO8601()
+        .withMessage("A valid date is required."),
+
+      body("severity")
+        .optional()
+        .isIn(severities)
+        .withMessage("Invalid severity."),
+
+      body("quantity")
+        .optional()
+        .isFloat({ min: 0 })
+        .withMessage("Quantity cannot be negative."),
+
+      body("nextDueDate")
+        .optional({ checkFalsy: true })
+        .isISO8601()
+        .withMessage("Next due date must be valid."),
     ],
     validateRequest,
     createHealthRecord
@@ -47,7 +67,7 @@ router
       body("date").optional().isISO8601(),
       body("severity").optional().isIn(severities),
       body("quantity").optional().isFloat({ min: 0 }),
-      body("nextDueDate").optional().isISO8601(),
+      body("nextDueDate").optional({ checkFalsy: true }).isISO8601(),
     ],
     validateRequest,
     updateHealthRecord

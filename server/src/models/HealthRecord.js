@@ -27,7 +27,7 @@ const healthRecordSchema = new mongoose.Schema(
     },
     date: {
       type: Date,
-      required: true,
+      required: [true, "Record date is required"],
     },
     description: {
       type: String,
@@ -72,6 +72,6 @@ const healthRecordSchema = new mongoose.Schema(
   }
 );
 
-healthRecordSchema.index({ flock: 1, date: -1 });
+healthRecordSchema.index({ farm: 1, date: -1 });
 
 module.exports = mongoose.model("HealthRecord", healthRecordSchema);

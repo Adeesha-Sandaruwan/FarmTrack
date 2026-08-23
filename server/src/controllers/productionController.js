@@ -11,10 +11,6 @@ const getFarmId = (req, res) => {
   return req.user.farm;
 };
 
-const findFlock = (flockId, farmId) =>
-  Flock.findOne({ _id: flockId, farm: farmId });
-
-// GET /api/production
 const getProductionRecords = asyncHandler(async (req, res) => {
   const farmId = getFarmId(req, res);
   const query = { farm: farmId };
@@ -35,10 +31,13 @@ const getProductionRecords = asyncHandler(async (req, res) => {
   });
 });
 
-// POST /api/production
 const createProductionRecord = asyncHandler(async (req, res) => {
   const farmId = getFarmId(req, res);
-  const flock = await findFlock(req.body.flock, farmId);
+
+  const flock = await Flock.findOne({
+    _id: req.body.flock,
+    farm: farmId,
+  });
 
   if (!flock) {
     res.status(404);
@@ -55,7 +54,7 @@ const createProductionRecord = asyncHandler(async (req, res) => {
 
   if (damagedEggs > eggCount) {
     res.status(400);
-    throw new Error("Damaged eggs cannot exceed the total egg count.");
+    throw new Error("Damaged eggs cannot exceed total egg count.");
   }
 
   const record = await ProductionRecord.create({
@@ -76,7 +75,6 @@ const createProductionRecord = asyncHandler(async (req, res) => {
   });
 });
 
-// PATCH /api/production/:id
 const updateProductionRecord = asyncHandler(async (req, res) => {
   const farmId = getFarmId(req, res);
 
@@ -90,17 +88,23 @@ const updateProductionRecord = asyncHandler(async (req, res) => {
     throw new Error("Production record not found.");
   }
 
-  const fields = ["date", "eggCount", "damagedEggs", "averageBirdWeight", "notes"];
+  const allowedFields = [
+    "date",
+    "eggCount",
+    "damagedEggs",
+    "averageBirdWeight",
+    "notes",
+  ];
 
-  fields.forEach((field) => {
+  allowedFields.forEach((field) => {
     if (Object.prototype.hasOwnProperty.call(req.body, field)) {
       record[field] = req.body[field];
     }
   });
 
-  if (record.damagedEggs > record.eggCount) {
+  if (Number(record.damagedEggs) > Number(record.eggCount)) {
     res.status(400);
-    throw new Error("Damaged eggs cannot exceed the total egg count.");
+    throw new Error("Damaged eggs cannot exceed total egg count.");
   }
 
   await record.save();
@@ -112,7 +116,6 @@ const updateProductionRecord = asyncHandler(async (req, res) => {
   });
 });
 
-// DELETE /api/production/:id
 const deleteProductionRecord = asyncHandler(async (req, res) => {
   const farmId = getFarmId(req, res);
 

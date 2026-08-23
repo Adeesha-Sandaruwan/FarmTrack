@@ -6,9 +6,11 @@ const userRoutes = require("./routes/userRoutes");
 const farmRoutes = require("./routes/farmRoutes");
 const flockRoutes = require("./routes/flockRoutes");
 const inventoryRoutes = require("./routes/inventoryRoutes");
-const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const productionRoutes = require("./routes/productionRoutes");
 const healthRecordRoutes = require("./routes/healthRecordRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+
+const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const app = express();
 
@@ -34,6 +36,7 @@ app.use("/api/flocks", flockRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/production", productionRoutes);
 app.use("/api/health-records", healthRecordRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
