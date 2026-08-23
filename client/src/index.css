@@ -942,7 +942,7 @@ button:disabled {
   color: #b4513c !important;
   font-weight: 700;
 }
-
+}
 /* ---------- Overview dashboard ---------- */
 
 .overview-kpi-grid {
@@ -1006,10 +1006,7 @@ button:disabled {
   background: #f8fcf8;
   color: #1c693c;
   text-decoration: none;
-  transition:
-    transform 0.18s ease,
-    border-color 0.18s ease,
-    box-shadow 0.18s ease;
+  transition: transform 0.18s ease;
 }
 
 .quick-action-card:hover {
@@ -1170,6 +1167,4 @@ button:disabled {
     grid-column: 2;
     text-align: left;
   }
-}
-
 }
