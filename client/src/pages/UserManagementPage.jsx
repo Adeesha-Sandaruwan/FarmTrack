@@ -143,11 +143,11 @@ const UserManagementPage = () => {
   };
 
   const handleDelete = async (selectedUser) => {
-    const confirmed = window.confirm(
-      `Delete ${selectedUser.name}'s account permanently?`
-    );
-
-    if (!confirmed) {
+    if (
+      !window.confirm(
+        `Delete ${selectedUser.name}'s account permanently?`
+      )
+    ) {
       return;
     }
 
@@ -189,10 +189,6 @@ const UserManagementPage = () => {
 
           <NavLink className={navLinkClass} to="/inventory">
             Feed & Inventory
-          </NavLink>
-
-          <NavLink className={navLinkClass} to="/production-health">
-            Production & Health
           </NavLink>
 
           <NavLink className={navLinkClass} to="/users">
@@ -345,7 +341,7 @@ const UserManagementPage = () => {
             <p className="loading-text">Loading user accounts...</p>
           ) : (
             <div className="flock-table-wrap">
-              <table className="flock-table user-table">
+              <table className="flock-table">
                 <thead>
                   <tr>
                     <th>User</th>

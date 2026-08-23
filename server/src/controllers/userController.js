@@ -54,7 +54,7 @@ const createUser = asyncHandler(async (req, res) => {
     email,
     password,
     role,
-    farm: farm || null,
+    farm: farm || req.user.farm || null,
   });
 
   res.status(201).json({

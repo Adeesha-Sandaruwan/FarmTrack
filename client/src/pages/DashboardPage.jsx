@@ -95,6 +95,12 @@ const DashboardPage = () => {
             Feed & Inventory
           </NavLink>
 
+          {user?.role === "admin" && (
+          <NavLink className={navLinkClass} to="/users">
+             User Management
+          </NavLink>
+          )}
+
           <NavLink className={navLinkClass} to="/production-health">
             Production & Health
           </NavLink>

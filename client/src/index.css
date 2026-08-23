@@ -1196,3 +1196,31 @@ button:disabled {
     min-width: 170px;
   }
 }
+
+.user-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inline-select {
+  min-width: 130px;
+  height: 36px;
+  padding: 0 9px;
+  font-size: 0.82rem;
+}
+
+.danger-action {
+  background: #fff0ed;
+  color: #ae422d;
+}
+
+.danger-action:hover {
+  background: #ffe2dc;
+}
+
+@media (max-width: 760px) {
+  .user-actions {
+    min-width: 170px;
+  }
+}

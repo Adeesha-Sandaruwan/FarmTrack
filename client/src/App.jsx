@@ -1,11 +1,13 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
+import AdminRoute from "./components/AdminRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
 import FlocksPage from "./pages/FlocksPage";
 import InventoryPage from "./pages/InventoryPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import UserManagementPage from "./pages/UserManagementPage";
 
 const App = () => {
   return (
@@ -17,6 +19,10 @@ const App = () => {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/flocks" element={<FlocksPage />} />
         <Route path="/inventory" element={<InventoryPage />} />
+
+        <Route element={<AdminRoute />}>
+          <Route path="/users" element={<UserManagementPage />} />
+        </Route>
       </Route>
 
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
