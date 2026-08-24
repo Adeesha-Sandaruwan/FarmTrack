@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 
-const salesSchema = new mongoose.Schema(
+const expenseSchema = new mongoose.Schema(
 
   {
 
@@ -20,7 +20,7 @@ const salesSchema = new mongoose.Schema(
 
 
     // Related flock (optional)
-    // Used for profit per flock analytics
+    // Used for flock-level cost calculation
     flock: {
 
       type: mongoose.Schema.Types.ObjectId,
@@ -34,67 +34,48 @@ const salesSchema = new mongoose.Schema(
     },
 
 
-    // Income category
+    // Expense type
     category: {
 
       type: String,
 
       required: [
         true,
-        "Sale category is required"
+        "Expense category is required"
       ],
 
       enum: [
-        "egg",
-        "chicken",
+
+        "feed",
+
+        "medicine",
+
+        "labour",
+
+        "electricity",
+
+        "water",
+
+        "transportation",
+
+        "equipment",
+
         "other"
+
       ],
 
     },
 
 
-    // Quantity sold
-    quantity: {
-
-      type: Number,
-
-      required: [
-        true,
-        "Quantity is required"
-      ],
-
-      min: [
-        0,
-        "Quantity cannot be negative"
-      ],
-
-    },
-
-
-    // Price per unit
-    unitPrice: {
-
-      type: Number,
-
-      required: [
-        true,
-        "Unit price is required"
-      ],
-
-      min: [
-        0,
-        "Unit price cannot be negative"
-      ],
-
-    },
-
-
-    // Total income
+    // Expense amount
     amount: {
 
       type: Number,
 
-      required: true,
+      required: [
+        true,
+        "Expense amount is required"
+      ],
 
       min: [
         0,
@@ -104,7 +85,7 @@ const salesSchema = new mongoose.Schema(
     },
 
 
-    // Sale date
+    // Expense date
     date: {
 
       type: Date,
@@ -116,7 +97,7 @@ const salesSchema = new mongoose.Schema(
     },
 
 
-    // Additional details
+    // Description
     description: {
 
       type: String,
@@ -133,7 +114,7 @@ const salesSchema = new mongoose.Schema(
     },
 
 
-    // User who entered the sale
+    // User who created expense
     createdBy: {
 
       type: mongoose.Schema.Types.ObjectId,
@@ -147,7 +128,6 @@ const salesSchema = new mongoose.Schema(
 
   },
 
-
   {
 
     timestamps: true,
@@ -158,23 +138,7 @@ const salesSchema = new mongoose.Schema(
 
 
 
-// Automatically calculate amount
-salesSchema.pre("validate", function(next){
-
-  if(this.quantity && this.unitPrice){
-
-    this.amount =
-      this.quantity * this.unitPrice;
-
-  }
-
-  next();
-
-});
-
-
-
 module.exports = mongoose.model(
-  "Sales",
-  salesSchema
+  "Expense",
+  expenseSchema
 );
