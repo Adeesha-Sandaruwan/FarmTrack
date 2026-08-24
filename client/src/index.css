@@ -111,9 +111,15 @@ button {
   width: fit-content;
   gap: 8px;
   margin: 0 0 42px;
+  color: #ffffff;
   font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+.brand-name:visited {
+  color: #ffffff;
 }
 
 .brand-name::before {
@@ -307,6 +313,11 @@ button:disabled {
 }
 
 .brand-name:hover {
+  color: #d9f1a8;
+}
+
+.brand-name:active,
+.brand-name:focus-visible {
   color: #d9f1a8;
 }
 
