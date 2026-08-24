@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import AdminRoute from "./components/AdminRoute";
@@ -12,6 +13,10 @@ import UserManagementPage from "./pages/UserManagementPage";
 
 const App = () => {
   const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [location.pathname]);
 
   return (
     <div className="route-transition" key={location.pathname}>

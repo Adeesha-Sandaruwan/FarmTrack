@@ -24,16 +24,20 @@ body {
 
 .route-transition {
   min-height: 100vh;
-  animation: route-enter 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: route-enter 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: 50% 8%;
+  will-change: opacity, transform, filter;
 }
 
 @keyframes route-enter {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    filter: blur(7px);
+    transform: translateY(16px) scale(0.985);
   }
   to {
     opacity: 1;
+    filter: blur(0);
     transform: translateY(0);
   }
 }
@@ -542,6 +546,8 @@ button:disabled {
 
   .route-transition {
     animation: none;
+    will-change: auto;
+    filter: none;
   }
 }
 
