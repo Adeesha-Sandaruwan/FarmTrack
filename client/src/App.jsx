@@ -1,9 +1,11 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import AdminRoute from "./components/AdminRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
 import FlocksPage from "./pages/FlocksPage";
+import HomePage from "./pages/HomePage";
 import InventoryPage from "./pages/InventoryPage";
 import LoginPage from "./pages/LoginPage";
 import ProductionHealthPage from "./pages/ProductionHealthPage";
@@ -11,8 +13,15 @@ import RegisterPage from "./pages/RegisterPage";
 import UserManagementPage from "./pages/UserManagementPage";
 
 const App = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [location.pathname]);
+
   return (
-    <Routes>
+    <div className="route-transition" key={location.pathname}>
+      <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
@@ -27,9 +36,10 @@ const App = () => {
         </Route>
       </Route>
 
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/" element={<HomePage />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
-    </Routes>
+      </Routes>
+    </div>
   );
 };
 

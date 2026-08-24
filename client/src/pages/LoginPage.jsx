@@ -38,7 +38,7 @@ const LoginPage = () => {
   return (
     <main className="auth-layout">
       <section className="brand-panel">
-        <p className="brand-name">FarmTrack</p>
+        <Link className="brand-name" to="/">FarmTrack</Link>
         <h1>Every layer tells a story</h1>
         <p className="brand-description">
           Replace disconnected spreadsheets with reliable digital records
