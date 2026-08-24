@@ -13,12 +13,29 @@
 
 html {
   background: #f3f7f1;
+  scroll-behavior: smooth;
 }
 
 body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+}
+
+.route-transition {
+  min-height: 100vh;
+  animation: route-enter 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes route-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 button,
@@ -289,6 +306,10 @@ button:disabled {
   text-decoration: none;
 }
 
+.brand-name:hover {
+  color: #d9f1a8;
+}
+
 .text-link:hover,
 .form-footer a:hover,
 .success-message a:hover {
@@ -506,6 +527,10 @@ button:disabled {
   *::after {
     scroll-behavior: auto !important;
     transition: none !important;
+  }
+
+  .route-transition {
+    animation: none;
   }
 }
 

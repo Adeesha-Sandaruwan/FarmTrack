@@ -72,7 +72,7 @@ const RegisterPage = () => {
   return (
     <main className="auth-layout register-layout">
       <section className="brand-panel">
-        <p className="brand-name">FarmTrack</p>
+        <Link className="brand-name" to="/">FarmTrack</Link>
         <h1>Create your FarmTrack account</h1>
         <p className="brand-description">
           Set up your farm profile to start managing flocks, inventory,

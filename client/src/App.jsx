@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import AdminRoute from "./components/AdminRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -11,8 +11,11 @@ import RegisterPage from "./pages/RegisterPage";
 import UserManagementPage from "./pages/UserManagementPage";
 
 const App = () => {
+  const location = useLocation();
+
   return (
-    <Routes>
+    <div className="route-transition" key={location.pathname}>
+      <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
@@ -28,7 +31,8 @@ const App = () => {
 
       <Route path="/" element={<HomePage />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
-    </Routes>
+      </Routes>
+    </div>
   );
 };
 
