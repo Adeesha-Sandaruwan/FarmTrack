@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
+import DashboardSidebar from "../components/DashboardSidebar";
 
 const emptyUserForm = {
   name: "",
@@ -13,6 +15,7 @@ const emptyUserForm = {
 const UserManagementPage = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,8 +23,6 @@ const UserManagementPage = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState(emptyUserForm);
-
-  const navLinkClass = ({ isActive }) => (isActive ? "active" : undefined);
 
   const loadUsers = async () => {
     try {
@@ -33,7 +34,7 @@ const UserManagementPage = () => {
     } catch (requestError) {
       setError(
         requestError.response?.data?.message ||
-          "Unable to load user accounts."
+          t("userManagement.noUsersFound", "Unable to load user accounts.")
       );
     } finally {
       setLoading(false);
@@ -96,12 +97,12 @@ const UserManagementPage = () => {
       await api.post("/users", formData);
 
       setFormData(emptyUserForm);
-      setMessage("User account created successfully.");
+      setMessage(t("common.success", "User account created successfully."));
       await loadUsers();
     } catch (requestError) {
       setError(
         requestError.response?.data?.message ||
-          "Unable to create the user account."
+          t("common.error", "Unable to create the user account.")
       );
     } finally {
       setSaving(false);
@@ -119,7 +120,7 @@ const UserManagementPage = () => {
     } catch (requestError) {
       setError(
         requestError.response?.data?.message ||
-          "Unable to update this user."
+          t("common.error", "Unable to update this user.")
       );
     }
   };
@@ -128,7 +129,7 @@ const UserManagementPage = () => {
     updateUser(
       selectedUser.id,
       { role: event.target.value },
-      `${selectedUser.name}'s role was updated.`
+      t("userManagement.roleUpdated", `${selectedUser.name}'s role was updated.`)
     );
   };
 
@@ -145,7 +146,7 @@ const UserManagementPage = () => {
   const handleDelete = async (selectedUser) => {
     if (
       !window.confirm(
-        `Delete ${selectedUser.name}'s account permanently?`
+        t("userManagement.deleteConfirm", `Delete ${selectedUser.name}'s account permanently?`)
       )
     ) {
       return;
@@ -161,7 +162,7 @@ const UserManagementPage = () => {
     } catch (requestError) {
       setError(
         requestError.response?.data?.message ||
-          "Unable to delete this user."
+          t("common.error", "Unable to delete this user.")
       );
     }
   };
@@ -173,49 +174,21 @@ const UserManagementPage = () => {
 
   return (
     <main className="farm-dashboard">
-      <aside className="dashboard-sidebar">
-        <Link className="sidebar-brand" to="/dashboard">
-          FarmTrack
-        </Link>
-
-        <nav className="sidebar-nav">
-          <NavLink end className={navLinkClass} to="/dashboard">
-            Overview
-          </NavLink>
-
-          <NavLink className={navLinkClass} to="/flocks">
-            Flock Management
-          </NavLink>
-
-          <NavLink className={navLinkClass} to="/inventory">
-            Feed & Inventory
-          </NavLink>
-
-          <NavLink className={navLinkClass} to="/users">
-            Team Management
-          </NavLink>
-
-          <span title="Waiting for Finance module integration">
-            Finance & Analytics
-          </span>
-        </nav>
-
-        <div className="sidebar-user">
-          <strong>{user?.name}</strong>
-          <span>{user?.role}</span>
-
-          <button type="button" onClick={handleLogout}>
-            Sign out
-          </button>
-        </div>
-      </aside>
+      <DashboardSidebar user={user} onLogout={handleLogout} />
 
       <section className="dashboard-content">
         <header className="dashboard-header">
           <div>
-            <p className="eyebrow">Administrator access</p>
-            <h1>Team Management</h1>
-            <p>Create and manage FarmTrack user accounts.</p>
+            <p className="eyebrow">
+              {t("userManagement.adminRole", "Administrator access")}
+            </p>
+            <h1>{t("userManagement.title", "Team Management")}</h1>
+            <p>
+              {t(
+                "userManagement.subtitle",
+                "Create and manage FarmTrack user accounts."
+              )}
+            </p>
           </div>
 
           <button
@@ -224,7 +197,9 @@ const UserManagementPage = () => {
             onClick={loadUsers}
             disabled={loading}
           >
-            {loading ? "Refreshing..." : "Refresh users"}
+            {loading
+              ? t("common.loading", "Refreshing...")
+              : t("common.refresh", "Refresh users")}
           </button>
         </header>
 
@@ -233,46 +208,51 @@ const UserManagementPage = () => {
 
         <section className="overview-kpi-grid">
           <article className="overview-kpi-card">
-            <span>Total users</span>
+            <span>{t("userManagement.totalUsers", "Total users")}</span>
             <strong>{summary.total}</strong>
-            <p>All FarmTrack accounts</p>
+            <p>{t("userManagement.userListTitle", "All FarmTrack accounts")}</p>
           </article>
 
           <article className="overview-kpi-card">
-            <span>Administrators</span>
+            <span>{t("userManagement.admins", "Administrators")}</span>
             <strong>{summary.admins}</strong>
-            <p>Full system access</p>
+            <p>{t("userManagement.adminRole", "Full system access")}</p>
           </article>
 
           <article className="overview-kpi-card">
-            <span>Farm managers</span>
+            <span>{t("userManagement.managers", "Farm managers")}</span>
             <strong>{summary.managers}</strong>
-            <p>Operational management</p>
+            <p>{t("userManagement.managerRole", "Operational management")}</p>
           </article>
 
           <article className="overview-kpi-card">
-            <span>Farm workers</span>
+            <span>{t("userManagement.workers", "Farm workers")}</span>
             <strong>{summary.workers}</strong>
-            <p>Daily record access</p>
+            <p>{t("userManagement.workerRole", "Daily record access")}</p>
           </article>
         </section>
 
         <section className="management-panel">
           <div className="panel-heading">
             <div>
-              <p className="eyebrow">New team member</p>
-              <h2>Create user account</h2>
+              <p className="eyebrow">{t("userManagement.addUser", "New team member")}</p>
+              <h2>{t("userManagement.addUserModalTitle", "Create user account")}</h2>
             </div>
 
-            <span className="role-note">Administrator only</span>
+            <span className="role-note">
+              {t("userManagement.adminRole", "Administrator only")}
+            </span>
           </div>
 
           <form className="flock-form" onSubmit={handleCreateUser}>
             <label>
-              Full name
+              {t("userManagement.fullNameLabel", "Full name")}
               <input
                 name="name"
-                placeholder="e.g., Nimal Perera"
+                placeholder={t(
+                  "auth.fullNamePlaceholder",
+                  "e.g., Nimal Perera"
+                )}
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -280,11 +260,14 @@ const UserManagementPage = () => {
             </label>
 
             <label>
-              Email address
+              {t("userManagement.emailLabel", "Email address")}
               <input
                 type="email"
                 name="email"
-                placeholder="e.g., nimal@farmtrack.com"
+                placeholder={t(
+                  "auth.emailAddressPlaceholder",
+                  "e.g., nimal@farmtrack.com"
+                )}
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -292,25 +275,28 @@ const UserManagementPage = () => {
             </label>
 
             <label>
-              Role
+              {t("userManagement.roleLabel", "Role")}
               <select
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
               >
-                <option value="worker">Worker</option>
-                <option value="manager">Manager</option>
-                <option value="admin">Administrator</option>
+                <option value="worker">{t("userManagement.workers", "Worker")}</option>
+                <option value="manager">{t("userManagement.managers", "Manager")}</option>
+                <option value="admin">{t("userManagement.admins", "Administrator")}</option>
               </select>
             </label>
 
             <label className="form-wide">
-              Temporary password
+              {t("userManagement.passwordLabel", "Temporary password")}
               <input
                 type="password"
                 name="password"
                 minLength="8"
-                placeholder="At least 8 characters"
+                placeholder={t(
+                  "auth.createPasswordPlaceholder",
+                  "At least 8 characters"
+                )}
                 value={formData.password}
                 onChange={handleChange}
                 required
@@ -322,7 +308,9 @@ const UserManagementPage = () => {
               type="submit"
               disabled={saving}
             >
-              {saving ? "Creating account..." : "Create team member"}
+              {saving
+                ? t("userManagement.creatingUser", "Creating account...")
+                : t("userManagement.createUserBtn", "Create team member")}
             </button>
           </form>
         </section>
@@ -330,25 +318,29 @@ const UserManagementPage = () => {
         <section className="management-panel">
           <div className="panel-heading">
             <div>
-              <p className="eyebrow">All accounts</p>
-              <h2>Team users</h2>
+              <p className="eyebrow">{t("userManagement.userListTitle", "All accounts")}</p>
+              <h2>{t("userManagement.userListTitle", "Team users")}</h2>
             </div>
 
-            <span className="role-note">{users.length} users</span>
+            <span className="role-note">
+              {users.length} {t("userManagement.totalUsers", "users")}
+            </span>
           </div>
 
           {loading ? (
-            <p className="loading-text">Loading user accounts...</p>
+            <p className="loading-text">
+              {t("common.loading", "Loading user accounts...")}
+            </p>
           ) : (
             <div className="flock-table-wrap">
               <table className="flock-table">
                 <thead>
                   <tr>
-                    <th>User</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Created</th>
-                    <th>Actions</th>
+                    <th>{t("userManagement.nameCol", "User")}</th>
+                    <th>{t("userManagement.roleCol", "Role")}</th>
+                    <th>{t("userManagement.statusCol", "Status")}</th>
+                    <th>{t("common.date", "Created")}</th>
+                    <th>{t("userManagement.actionsCol", "Actions")}</th>
                   </tr>
                 </thead>
 
@@ -372,9 +364,9 @@ const UserManagementPage = () => {
                             }
                             disabled={isCurrentUser}
                           >
-                            <option value="admin">Administrator</option>
-                            <option value="manager">Manager</option>
-                            <option value="worker">Worker</option>
+                            <option value="admin">{t("userManagement.admins", "Administrator")}</option>
+                            <option value="manager">{t("userManagement.managers", "Manager")}</option>
+                            <option value="worker">{t("userManagement.workers", "Worker")}</option>
                           </select>
                         </td>
 
@@ -384,7 +376,9 @@ const UserManagementPage = () => {
                               selectedUser.isActive ? "active" : "closed"
                             }`}
                           >
-                            {selectedUser.isActive ? "Active" : "Inactive"}
+                            {selectedUser.isActive
+                              ? t("userManagement.activeStatus", "Active")
+                              : t("userManagement.inactiveStatus", "Inactive")}
                           </span>
                         </td>
 
@@ -403,8 +397,8 @@ const UserManagementPage = () => {
                               disabled={isCurrentUser}
                             >
                               {selectedUser.isActive
-                                ? "Deactivate"
-                                : "Activate"}
+                                ? t("userManagement.deactivate", "Deactivate")
+                                : t("userManagement.activate", "Activate")}
                             </button>
 
                             <button
@@ -413,7 +407,7 @@ const UserManagementPage = () => {
                               onClick={() => handleDelete(selectedUser)}
                               disabled={isCurrentUser}
                             >
-                              Delete
+                              {t("userManagement.deleteUser", "Delete")}
                             </button>
                           </div>
                         </td>
