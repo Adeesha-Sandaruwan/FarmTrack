@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap");
 
 :root {
-  font-family: "DM Sans", sans-serif;
+  font-family: "DM Sans", "Noto Sans Sinhala", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #172d1e;
   background: #f3f7f1;
   font-synthesis: none;
@@ -275,7 +275,10 @@ select:focus {
   box-shadow: 0 0 0 4px rgba(93, 173, 111, 0.17);
 }
 
-button {
+.auth-card form button,
+.form-panel form button,
+.flock-form button,
+.primary-button {
   width: 100%;
   min-height: 50px;
   margin-top: 27px;
@@ -292,17 +295,26 @@ button {
     filter 0.18s ease;
 }
 
-button:hover {
+.auth-card form button:hover,
+.form-panel form button:hover,
+.flock-form button:hover,
+.primary-button:hover {
   box-shadow: 0 11px 24px rgba(20, 91, 47, 0.28);
   filter: brightness(1.06);
   transform: translateY(-2px);
 }
 
-button:active {
+.auth-card form button:active,
+.form-panel form button:active,
+.flock-form button:active,
+.primary-button:active {
   transform: translateY(0);
 }
 
-button:disabled {
+.auth-card form button:disabled,
+.form-panel form button:disabled,
+.flock-form button:disabled,
+.primary-button:disabled {
   cursor: not-allowed;
   opacity: 0.65;
   transform: none;
@@ -1581,8 +1593,200 @@ button:disabled {
   background: #ffe2dc;
 }
 
-@media (max-width: 760px) {
-  .user-actions {
-    min-width: 170px;
-  }
+/* ==========================================================================
+   Modern Language Switcher (Compact Segmented Pill)
+   ========================================================================== */
+
+.ft-lang-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 32px !important;
+  max-height: 32px !important;
+  background: rgba(0, 0, 0, 0.22) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 999px !important;
+  padding: 2px !important;
+  gap: 2px !important;
+  user-select: none !important;
+  box-sizing: border-box !important;
+  vertical-align: middle !important;
+  margin: 0 !important;
 }
+
+.ft-lang-btn {
+  all: unset !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  height: 26px !important;
+  max-height: 26px !important;
+  padding: 0 9px !important;
+  border: none !important;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-family: inherit !important;
+  font-size: 0.74rem !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  border-radius: 999px !important;
+  transition: all 0.16s ease-in-out !important;
+  outline: none !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  width: auto !important;
+}
+
+.ft-lang-btn:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.ft-lang-btn.active {
+  background: #ffffff !important;
+  color: #113620 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18) !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+.ft-lang-flag-box {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 16px !important;
+  height: 11px !important;
+  border-radius: 2px !important;
+  overflow: hidden !important;
+  box-shadow: 0 0.5px 2px rgba(0, 0, 0, 0.25) !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+}
+
+.lang-flag-svg {
+  width: 16px !important;
+  height: 11px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.ft-lang-label {
+  line-height: 1 !important;
+  display: inline-block !important;
+  letter-spacing: 0.01em !important;
+}
+
+.ft-lang-label--si {
+  font-family: "Noto Sans Sinhala", sans-serif !important;
+  font-size: 0.74rem !important;
+}
+
+/* Compact variant */
+.ft-lang-toggle.compact {
+  height: 30px !important;
+  max-height: 30px !important;
+  padding: 2px !important;
+}
+
+.ft-lang-toggle.compact .ft-lang-btn {
+  height: 24px !important;
+  max-height: 24px !important;
+  padding: 0 8px !important;
+  font-size: 0.72rem !important;
+  gap: 5px !important;
+}
+
+.ft-lang-toggle.compact .ft-lang-flag-box {
+  width: 15px !important;
+  height: 10px !important;
+}
+
+.ft-lang-toggle.compact .lang-flag-svg {
+  width: 15px !important;
+  height: 10px !important;
+}
+
+/* ==========================================================================
+   Contextual Environments for Language Toggle
+   ========================================================================== */
+
+/* 1. Inside Header (Glassmorphic) */
+.home-header .ft-lang-toggle {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.home-auth-links {
+  display: flex !important;
+  align-items: center !important;
+  gap: clamp(12px, 1.8vw, 24px) !important;
+}
+
+/* 2. Inside Dashboard Sidebar (Dark Theme) */
+.dashboard-sidebar .ft-lang-toggle {
+  width: 100% !important;
+  height: 34px !important;
+  max-height: 34px !important;
+  background: rgba(0, 0, 0, 0.28) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.dashboard-sidebar .ft-lang-btn {
+  flex: 1 !important;
+  height: 28px !important;
+  max-height: 28px !important;
+  color: #9cbda4 !important;
+}
+
+.dashboard-sidebar .ft-lang-btn:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.dashboard-sidebar .ft-lang-btn.active {
+  background: #ffffff !important;
+  color: #0d2e1a !important;
+}
+
+.sidebar-lang-box {
+  padding: 12px 0 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  margin-top: 12px !important;
+}
+
+/* 3. Inside Authentication cards */
+.auth-top-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  margin-bottom: 14px !important;
+}
+
+.auth-top-actions .ft-lang-toggle {
+  background: #e4eee5 !important;
+  border: 1px solid #c9dacb !important;
+  height: 30px !important;
+}
+
+.auth-top-actions .ft-lang-btn {
+  color: #3b5745 !important;
+}
+
+.auth-top-actions .ft-lang-btn:hover {
+  color: #123d24 !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+.auth-top-actions .ft-lang-btn.active {
+  background: #ffffff !important;
+  color: #123d24 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}

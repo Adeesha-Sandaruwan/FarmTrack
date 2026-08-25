@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
+import LanguageToggle from "../components/LanguageToggle";
 
 const RegisterPage = () => {
   const { register } = useAuth();
+  const { t } = useLanguage();
 
   const [formData, setFormData] = useState({
     farmName: "",
@@ -35,12 +38,17 @@ const RegisterPage = () => {
     setSuccess("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("auth.passwordsDoNotMatch", "Passwords do not match."));
       return;
     }
 
     if (!formData.acceptedTerms) {
-      setError("You must agree to the Terms of Service and Privacy Policy.");
+      setError(
+        t(
+          "auth.mustAgreeTerms",
+          "You must agree to the Terms of Service and Privacy Policy."
+        )
+      );
       return;
     }
 
@@ -57,12 +65,15 @@ const RegisterPage = () => {
       });
 
       setSuccess(
-        "Registration successful! You can now log in to manage your flock records, inventory, health, and finances."
+        t(
+          "auth.registrationSuccess",
+          "Registration successful! You can now log in to manage your flock records, inventory, health, and finances."
+        )
       );
     } catch (requestError) {
       setError(
         requestError.response?.data?.message ||
-          "Registration failed. Please try again."
+          t("auth.registrationFailed", "Registration failed. Please try again.")
       );
     } finally {
       setSubmitting(false);
@@ -72,33 +83,48 @@ const RegisterPage = () => {
   return (
     <main className="auth-layout register-layout">
       <section className="brand-panel">
-        <Link className="brand-name" to="/">FarmTrack</Link>
-        <h1>Create your FarmTrack account</h1>
+        <Link className="brand-name" to="/">
+          FarmTrack
+        </Link>
+        <h1>
+          {t("auth.createAccount", "Create your FarmTrack account")}
+        </h1>
         <p className="brand-description">
-          Set up your farm profile to start managing flocks, inventory,
-          production, and finances.
+          {t(
+            "auth.createAccountDesc",
+            "Set up your farm profile to start managing flocks, inventory, production, and finances."
+          )}
         </p>
       </section>
 
       <section className="form-panel">
         <form className="auth-card" onSubmit={handleSubmit}>
-          <h1>Create your FarmTrack account</h1>
+          <div className="auth-top-actions">
+            <LanguageToggle compact />
+          </div>
+
+          <h1>
+            {t("auth.createAccount", "Create your FarmTrack account")}
+          </h1>
 
           {error && <p className="error-message">{error}</p>}
 
           {success && (
             <div className="success-message">
               <p>{success}</p>
-              <Link to="/login">Sign in here</Link>
+              <Link to="/login">{t("auth.signInHere", "Sign in here")}</Link>
             </div>
           )}
 
           <label>
-            Farm / Flock Name
+            {t("auth.farmName", "Farm / Flock Name")}
             <input
               type="text"
               name="farmName"
-              placeholder="e.g., Green Valley Layers"
+              placeholder={t(
+                "auth.farmNamePlaceholder",
+                "e.g., Green Valley Layers"
+              )}
               value={formData.farmName}
               onChange={handleChange}
               required
@@ -106,11 +132,14 @@ const RegisterPage = () => {
           </label>
 
           <label>
-            Full Name
+            {t("auth.fullName", "Full Name")}
             <input
               type="text"
               name="name"
-              placeholder="Enter your full name"
+              placeholder={t(
+                "auth.fullNamePlaceholder",
+                "Enter your full name"
+              )}
               value={formData.name}
               onChange={handleChange}
               required
@@ -118,11 +147,14 @@ const RegisterPage = () => {
           </label>
 
           <label>
-            Email Address
+            {t("auth.emailAddress", "Email Address")}
             <input
               type="email"
               name="email"
-              placeholder="Enter your email address"
+              placeholder={t(
+                "auth.emailAddressPlaceholder",
+                "Enter your email address"
+              )}
               value={formData.email}
               onChange={handleChange}
               required
@@ -130,11 +162,14 @@ const RegisterPage = () => {
           </label>
 
           <label>
-            Phone Number
+            {t("auth.phoneNumber", "Phone Number")}
             <input
               type="tel"
               name="phoneNumber"
-              placeholder="Enter your phone number"
+              placeholder={t(
+                "auth.phoneNumberPlaceholder",
+                "Enter your phone number"
+              )}
               value={formData.phoneNumber}
               onChange={handleChange}
               required
@@ -142,27 +177,40 @@ const RegisterPage = () => {
           </label>
 
           <label>
-            Flock Size
+            {t("auth.flockSize", "Flock Size")}
             <select
               name="flockSize"
               value={formData.flockSize}
               onChange={handleChange}
               required
             >
-              <option value="">Select your flock size</option>
-              <option value="under-500">Under 500 hens</option>
-              <option value="500-2000">500 – 2,000 hens</option>
-              <option value="2000-10000">2,000 – 10,000 hens</option>
-              <option value="over-10000">Over 10,000 hens</option>
+              <option value="">
+                {t("auth.selectFlockSize", "Select your flock size")}
+              </option>
+              <option value="under-500">
+                {t("auth.sizeUnder500", "Under 500 hens")}
+              </option>
+              <option value="500-2000">
+                {t("auth.size500To2000", "500 – 2,000 hens")}
+              </option>
+              <option value="2000-10000">
+                {t("auth.size2000To10000", "2,000 – 10,000 hens")}
+              </option>
+              <option value="over-10000">
+                {t("auth.sizeOver10000", "Over 10,000 hens")}
+              </option>
             </select>
           </label>
 
           <label>
-            Password
+            {t("auth.password", "Password")}
             <input
               type="password"
               name="password"
-              placeholder="Create a password (min. 8 characters)"
+              placeholder={t(
+                "auth.createPasswordPlaceholder",
+                "Create a password (min. 8 characters)"
+              )}
               value={formData.password}
               onChange={handleChange}
               minLength="8"
@@ -171,11 +219,14 @@ const RegisterPage = () => {
           </label>
 
           <label>
-            Confirm Password
+            {t("auth.confirmPassword", "Confirm Password")}
             <input
               type="password"
               name="confirmPassword"
-              placeholder="Re-enter your password"
+              placeholder={t(
+                "auth.confirmPasswordPlaceholder",
+                "Re-enter your password"
+              )}
               value={formData.confirmPassword}
               onChange={handleChange}
               minLength="8"
@@ -191,16 +242,22 @@ const RegisterPage = () => {
               onChange={handleChange}
             />
             <span>
-              I agree to the Terms of Service and Privacy Policy.
+              {t(
+                "auth.agreeTerms",
+                "I agree to the Terms of Service and Privacy Policy."
+              )}
             </span>
           </label>
 
           <button type="submit" disabled={submitting || Boolean(success)}>
-            {submitting ? "Creating account..." : "Create My Farm Dashboard"}
+            {submitting
+              ? t("auth.creatingAccount", "Creating account...")
+              : t("auth.createDashboardBtn", "Create My Farm Dashboard")}
           </button>
 
           <p className="form-footer">
-            Already have an account? <Link to="/login">Sign in here</Link>
+            {t("auth.alreadyHaveAccount", "Already have an account?")}{" "}
+            <Link to="/login">{t("auth.signInHere", "Sign in here")}</Link>
           </p>
         </form>
       </section>
