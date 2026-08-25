@@ -1,180 +1,76 @@
 const mongoose = require("mongoose");
 
-
 const salesSchema = new mongoose.Schema(
-
   {
-
-    // Related farm
     farm: {
-
       type: mongoose.Schema.Types.ObjectId,
-
       ref: "Farm",
-
       required: true,
-
       index: true,
-
     },
 
-
-    // Related flock (optional)
-    // Used for profit per flock analytics
     flock: {
-
       type: mongoose.Schema.Types.ObjectId,
-
       ref: "Flock",
-
       required: false,
-
       index: true,
-
     },
 
-
-    // Income category
     category: {
-
       type: String,
-
-      required: [
-        true,
-        "Sale category is required"
-      ],
-
-      enum: [
-        "egg",
-        "chicken",
-        "other"
-      ],
-
+      required: [true, "Sale category is required"],
+      enum: ["egg", "chicken", "other"],
     },
 
-
-    // Quantity sold
     quantity: {
-
       type: Number,
-
-      required: [
-        true,
-        "Quantity is required"
-      ],
-
-      min: [
-        0,
-        "Quantity cannot be negative"
-      ],
-
+      required: [true, "Quantity is required"],
+      min: [0, "Quantity cannot be negative"],
     },
 
-
-    // Price per unit
     unitPrice: {
-
       type: Number,
-
-      required: [
-        true,
-        "Unit price is required"
-      ],
-
-      min: [
-        0,
-        "Unit price cannot be negative"
-      ],
-
+      required: [true, "Unit price is required"],
+      min: [0, "Unit price cannot be negative"],
     },
 
-
-    // Total income
     amount: {
-
       type: Number,
-
       required: true,
-
-      min: [
-        0,
-        "Amount cannot be negative"
-      ],
-
+      min: [0, "Amount cannot be negative"],
     },
 
-
-    // Sale date
     date: {
-
       type: Date,
-
       required: true,
-
       default: Date.now,
-
     },
 
-
-    // Additional details
     description: {
-
       type: String,
-
       trim: true,
-
-      maxlength: [
-        500,
-        "Description cannot exceed 500 characters"
-      ],
-
+      maxlength: [500, "Description cannot exceed 500 characters"],
       default: "",
-
     },
 
-
-    // User who entered the sale
     createdBy: {
-
       type: mongoose.Schema.Types.ObjectId,
-
       ref: "User",
-
       required: true,
-
     },
-
-
   },
-
-
   {
-
     timestamps: true,
-
   }
-
 );
 
-
-
-// Automatically calculate amount
-salesSchema.pre("validate", function(next){
-
-  if(this.quantity && this.unitPrice){
-
-    this.amount =
-      this.quantity * this.unitPrice;
-
+// Automatically calculate total sale amount
+salesSchema.pre("validate", function (next) {
+  if (this.quantity != null && this.unitPrice != null) {
+    this.amount = this.quantity * this.unitPrice;
   }
 
   next();
-
 });
 
-
-
-module.exports = mongoose.model(
-  "Sales",
-  salesSchema
-);
+module.exports = mongoose.model("Sales", salesSchema);
