@@ -94,23 +94,28 @@ const FlocksPage = () => {
     };
   }, []);
 
-  const summary = useMemo(() => {
-    const activeFlocks = flocks.filter((flock) => flock.status === "active");
+const summary = useMemo(() => {
+  const activeFlocks = flocks.filter((flock) => flock.status === "active");
 
-    return {
-      totalFlocks: flocks.length,
-      activeFlocks: activeFlocks.length,
-      totalPopulation: flocks.reduce(
-        (sum, flock) => sum + (flock.currentPopulation || 0),
-        0
-      ),
-      totalMortality: flocks.reduce(
-        (sum, flock) => sum + (flock.totalMortality || 0),
-        0
-      ),
-    };
-  }, [flocks]);
-
+  return {
+    totalFlocks: flocks.length,
+    activeFlocks: activeFlocks.length,
+    totalPopulation: flocks.reduce(
+      (sum, flock) => sum + (flock.currentPopulation || 0),
+      0
+    ),
+    totalMortality: flocks.reduce(
+      (sum, flock) =>
+        sum +
+        Math.max(
+          0,
+          (flock.initialPopulation || 0) -
+            (flock.currentPopulation || 0)
+        ),
+      0
+    ),
+  };
+}, [flocks]);
   const handleFlockChange = (event) => {
     setFlockForm({
       ...flockForm,

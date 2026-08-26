@@ -20,38 +20,40 @@ const DashboardSidebar = ({ user, onLogout }) => {
       </Link>
 
       <nav className="sidebar-nav">
-        <NavLink end className={navLinkClass} to="/dashboard">
-          {t("nav.overview", "Overview")}
-        </NavLink>
-
-        <NavLink className={navLinkClass} to="/flocks">
-          {t("nav.flocks", "Flock Management")}
-        </NavLink>
-
-        <NavLink className={navLinkClass} to="/inventory">
-          {t("nav.inventory", "Feed & Inventory")}
-        </NavLink>
-
-        <NavLink className={navLinkClass} to="/production-health">
-          {t("nav.productionHealth", "Production & Health")}
-        </NavLink>
-
-        {user?.role === "admin" && (
+        {user?.role === "admin" ? (
           <NavLink className={navLinkClass} to="/users">
             {t("nav.userManagement", "User Management")}
           </NavLink>
-        )}
+        ) : (
+          <>
+            <NavLink end className={navLinkClass} to="/dashboard">
+              {t("nav.overview", "Overview")}
+            </NavLink>
 
-        <span title={t("common.comingSoon", "Coming soon")}>
-          {t("nav.financeAnalytics", "Finance & Analytics")}
-        </span>
+            <NavLink className={navLinkClass} to="/flocks">
+              {t("nav.flocks", "Flock Management")}
+            </NavLink>
+
+            <NavLink className={navLinkClass} to="/inventory">
+              {t("nav.inventory", "Feed & Inventory")}
+            </NavLink>
+
+            <NavLink className={navLinkClass} to="/production-health">
+              {t("nav.productionHealth", "Production & Health")}
+            </NavLink>
+
+            <span title={t("common.comingSoon", "Coming soon")}>
+              {t("nav.financeAnalytics", "Finance & Analytics")}
+            </span>
+          </>
+        )}
       </nav>
 
       <div className="sidebar-user">
         <strong>{user?.name}</strong>
         <span>{getRoleDisplay(user?.role)}</span>
 
-        <button type="button" onClick={onLogout}>
+        <button className="sidebar-signout" type="button" onClick={onLogout}>
           {t("common.signOut", "Sign out")}
         </button>
 

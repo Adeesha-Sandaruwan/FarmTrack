@@ -29,8 +29,8 @@ const LoginPage = () => {
     setSubmitting(true);
 
     try {
-      await login(formData);
-      navigate("/dashboard");
+      const { user: loggedInUser } = await login(formData);
+      navigate(loggedInUser?.role === "admin" ? "/users" : "/dashboard");
     } catch {
       setError(t("auth.invalidCredentials", "Invalid email or password. Please try again."));
     } finally {
