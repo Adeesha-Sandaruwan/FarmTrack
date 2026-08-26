@@ -237,20 +237,97 @@ const HomePage = () => {
       </section>
 
       <footer className="home-footer">
-        <Link className="home-logo" to="/" aria-label="FarmTrack home">
-          <span className="logo-mark" />
-          FarmTrack
-        </Link>
-        <p>{t("home.footerTagline", "Every layer tells a story.")}</p>
-        <div>
-          <a href="#about">{t("home.about", "About")}</a>
-          <a href="#services">{t("home.services", "Services")}</a>
-          <a href="#contact">{t("home.contact", "Contact")}</a>
-          <Link to="/login">{t("nav.logIn", "Log in")}</Link>
+        <div className="egotech-footer-intro">
+          <p className="footer-eyebrow">EgoTECHWORLD PVT LTD</p>
+          <h2>{t("home.egotechTitle", "What EgoTECH Does")}</h2>
+          <p>
+            {t(
+              "home.egotechIntro",
+              "From software development to education — we cover the full spectrum of IT."
+            )}
+          </p>
         </div>
-        <span className="footer-copy">
-          © {new Date().getFullYear()} {t("home.allRightsReserved", "FarmTrack. All rights reserved.")}
-        </span>
+
+        <div className="egotech-services">
+          <article>
+            <span className="egotech-icon" aria-hidden="true">💻</span>
+            <h3>{t("home.egotechSoftwareTitle", "Custom Software")}</h3>
+            <p>
+              {t(
+                "home.egotechSoftwareText",
+                "We design and build tailored software solutions — from POS systems and ERP tools to web platforms and mobile apps — built specifically for your business needs."
+              )}
+            </p>
+            <a href="https://www.egotechworld.com/about.php">Learn more <span aria-hidden="true">↗</span></a>
+          </article>
+          <article>
+            <span className="egotech-icon" aria-hidden="true">🎓</span>
+            <h3>{t("home.egotechCoursesTitle", "IT Courses & Training")}</h3>
+            <p>
+              {t(
+                "home.egotechCoursesText",
+                "EgoTECH offers 20+ free and paid online IT courses covering programming, web development, AI, and career skills — for students and professionals across Sri Lanka."
+              )}
+            </p>
+          </article>
+          <article>
+            <span className="egotech-icon" aria-hidden="true">💼</span>
+            <h3>{t("home.egotechJobsTitle", "IT Job Board")}</h3>
+            <p>
+              {t(
+                "home.egotechJobsText",
+                "We run one of Sri Lanka's most active IT job boards — connecting tech talent with employers locally and internationally."
+              )}
+            </p>
+            <a href="https://egotechworld.com/jobs.php">Visit job board <span aria-hidden="true">↗</span></a>
+          </article>
+          <article>
+            <span className="egotech-icon" aria-hidden="true">🛠️</span>
+            <h3>{t("home.egotechServicesTitle", "IT Services")}</h3>
+            <p>
+              {t(
+                "home.egotechServicesText",
+                "We provide website hosting consultation, domain setup, software debugging, database design, and technical support for businesses and individual developers."
+              )}
+            </p>
+          </article>
+        </div>
+
+        <div className="egotech-contact">
+          <div>
+            <p className="footer-eyebrow">Get in touch</p>
+            <h2>{t("home.egotechContactTitle", "Have a project in mind?")}</h2>
+            <p>Reach out to learn more about our software and courses.</p>
+          </div>
+          <div className="egotech-contact-links">
+            <a href="tel:+94743126123"><span aria-hidden="true">☎</span> +94 743 126 123</a>
+            <a href="https://wa.me/94743126123"><span aria-hidden="true">◌</span> WhatsApp Us</a>
+            <a href="mailto:contact@egotechworld.com"><span aria-hidden="true">✉</span> contact@egotechworld.com</a>
+          </div>
+        </div>
+
+        <div className="home-footer-base">
+          <div>
+            <Link className="home-logo" to="/" aria-label="FarmTrack home">
+              <span className="logo-mark" />
+              FarmTrack
+            </Link>
+            <p>{t("home.footerTagline", "Every layer tells a story.")}</p>
+          </div>
+          <nav aria-label="Footer navigation">
+            <a href="#about">{t("home.about", "About")}</a>
+            <a href="#services">{t("home.services", "Services")}</a>
+            <a href="#contact">{t("home.contact", "Contact")}</a>
+            <Link to="/login">{t("nav.logIn", "Log in")}</Link>
+          </nav>
+          <div className="egotech-legal">
+            <p>EgoTECHWORLD PVT LTD — A registered software development company in Sri Lanka. ROC No: PV00352315.</p>
+            <span><a href="https://www.egotechworld.com/privacy.php">Privacy Policy</a><a href="https://www.egotechworld.com/terms.php">Terms</a></span>
+          </div>
+          <span className="footer-copy">
+            © {new Date().getFullYear()} {t("home.allRightsReserved", "FarmTrack. All rights reserved.")}
+          </span>
+        </div>
       </footer>
     </main>
   );
