@@ -1,6 +1,9 @@
-# FarmTrack
+# **FarmTrack**
 
-FarmTrack is a web system for managing chicken farms.
+<img width="945" height="488" alt="image" src="https://github.com/user-attachments/assets/03dbe60c-39ed-402c-a7c3-f8d6e7920906" />
+
+
+**FarmTrack** is a web system for managing chicken farms.
 
 It helps farm owners and staff keep farm information in one place. Instead of using paper books or many spreadsheets, the team can record daily work and see important farm information more clearly.
 
