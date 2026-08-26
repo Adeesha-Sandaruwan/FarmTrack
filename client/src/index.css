@@ -859,11 +859,18 @@ select:focus {
 .flock-form {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0 16px;
+  align-items: start;
+  gap: 18px 16px;
 }
 
 .flock-form label {
   margin-top: 14px;
+  min-width: 0;
+}
+
+.flock-form input,
+.flock-form select {
+  min-width: 0;
 }
 
 .form-wide {
