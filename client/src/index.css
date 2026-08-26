@@ -465,7 +465,6 @@ select:focus {
   }
 
   .brand-panel {
-    min-height: auto;
     padding: 58px 32px 50px;
   }
 
@@ -504,7 +503,6 @@ select:focus {
   }
 
   .feature-card {
-    min-height: auto;
     padding: 15px;
   }
 
@@ -1641,6 +1639,7 @@ select:focus {
   border-radius: 999px !important;
   padding: 2px !important;
   gap: 2px !important;
+  -webkit-user-select: none !important;
   user-select: none !important;
   box-sizing: border-box !important;
   vertical-align: middle !important;
@@ -1755,6 +1754,7 @@ select:focus {
 .home-header .ft-lang-toggle {
   background: rgba(255, 255, 255, 0.16) !important;
   border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
   backdrop-filter: blur(8px) !important;
 }
 
