@@ -12,7 +12,7 @@ const expenseSchema = new mongoose.Schema(
     flock: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Flock",
-      required: false,
+      default: null,
       index: true,
     },
 
@@ -34,13 +34,14 @@ const expenseSchema = new mongoose.Schema(
     amount: {
       type: Number,
       required: [true, "Expense amount is required"],
-      min: [0, "Amount cannot be negative"],
+      min: [0, "Expense amount cannot be negative"],
     },
 
     date: {
       type: Date,
       required: true,
       default: Date.now,
+      index: true,
     },
 
     description: {
@@ -60,5 +61,8 @@ const expenseSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+expenseSchema.index({ farm: 1, date: -1 });
+expenseSchema.index({ farm: 1, category: 1 });
 
 module.exports = mongoose.model("Expense", expenseSchema);

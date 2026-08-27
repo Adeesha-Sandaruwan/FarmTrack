@@ -1,14 +1,13 @@
 const express = require("express");
 
-const router = express.Router();
-
 const {
   getFinanceSummary,
 } = require("../controllers/financeController");
 
 const { protect } = require("../middleware/authMiddleware");
 
-// All finance analytics routes require login
+const router = express.Router();
+
 router.use(protect);
 
 // GET /api/finance/summary

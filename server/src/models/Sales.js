@@ -12,7 +12,7 @@ const salesSchema = new mongoose.Schema(
     flock: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Flock",
-      required: false,
+      default: null,
       index: true,
     },
 
@@ -44,6 +44,7 @@ const salesSchema = new mongoose.Schema(
       type: Date,
       required: true,
       default: Date.now,
+      index: true,
     },
 
     description: {
@@ -64,13 +65,16 @@ const salesSchema = new mongoose.Schema(
   }
 );
 
-// Automatically calculate total sale amount
+// Automatically calculate total amount
 salesSchema.pre("validate", function (next) {
   if (this.quantity != null && this.unitPrice != null) {
-    this.amount = this.quantity * this.unitPrice;
+    this.amount = Number(this.quantity) * Number(this.unitPrice);
   }
 
   next();
 });
+
+salesSchema.index({ farm: 1, date: -1 });
+salesSchema.index({ farm: 1, category: 1 });
 
 module.exports = mongoose.model("Sales", salesSchema);
