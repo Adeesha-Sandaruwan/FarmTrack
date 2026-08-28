@@ -189,10 +189,10 @@ const InventoryPage = () => {
             Feed & Inventory
           </Link>
           {user?.role === "admin" && (
-  <Link to="/users">User Management</Link>
+         <Link to="/users">User Management</Link>
 )}
-          <span>Production & Health</span>
-          <span>Finance & Analytics</span>
+          <Link to="/production-health">production-health</Link>
+          <Link to="/finance">Finance & Analytics</Link>
         </nav>
 
         <div className="sidebar-user">

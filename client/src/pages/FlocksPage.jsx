@@ -211,8 +211,12 @@ const FlocksPage = () => {
   <Link to="/users">User Management</Link>
 )}
 
-          <span>Production & Health</span>
-          <span>Finance & Analytics</span>
+        <Link to="//production-health">Production & Health</Link>
+
+          <Link className="active" to="/finance">
+          Finance & Analytics
+          </Link>
+
         </nav>
 
         <div className="sidebar-user">

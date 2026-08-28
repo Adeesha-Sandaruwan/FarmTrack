@@ -105,9 +105,12 @@ const DashboardPage = () => {
             Production & Health
           </NavLink>
 
-          <span title="Waiting for Finance module integration">
-            Finance & Analytics
-          </span>
+          <NavLink
+          className={navLinkClass}
+          to="/finance"
+        >
+          Finance & Analytics
+        </NavLink>
         </nav>
 
         <div className="sidebar-user">

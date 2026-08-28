@@ -204,7 +204,7 @@ const ProductionHealthPage = () => {
           <Link className="active" to="/production-health">
             Production & Health
           </Link>
-          <span>Finance & Analytics</span>
+          <Link to="/finance">Finance & Analytics</Link>
         </nav>
 
         <div className="sidebar-user">
