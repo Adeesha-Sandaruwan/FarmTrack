@@ -65,15 +65,14 @@ const salesSchema = new mongoose.Schema(
   }
 );
 
-// Automatically calculate total amount
-salesSchema.pre("validate", function (next) {
+// Automatically calculate total sale amount
+salesSchema.pre("validate", function () {
   if (this.quantity != null && this.unitPrice != null) {
     this.amount = Number(this.quantity) * Number(this.unitPrice);
   }
-
-  next();
 });
 
+// Indexes
 salesSchema.index({ farm: 1, date: -1 });
 salesSchema.index({ farm: 1, category: 1 });
 
