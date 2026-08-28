@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
+import DashboardSidebar from "../components/DashboardSidebar";
 
 const today = new Date().toISOString().slice(0, 10);
 
@@ -28,6 +30,7 @@ const formatNumber = (value) => new Intl.NumberFormat().format(value || 0);
 const FlocksPage = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
 
   const [flocks, setFlocks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +56,7 @@ const FlocksPage = () => {
     } catch (requestError) {
       setPageError(
         requestError.response?.data?.message ||
-          "Unable to load flock records. Please try again."
+          t("flocks.noFlocksMatch", "Unable to load flock records. Please try again.")
       );
     } finally {
       setLoading(false);
@@ -98,12 +101,11 @@ const FlocksPage = () => {
       totalFlocks: flocks.length,
       activeFlocks: activeFlocks.length,
       totalPopulation: flocks.reduce(
-        (total, flock) => total + flock.currentPopulation,
+        (sum, flock) => sum + (flock.currentPopulation || 0),
         0
       ),
       totalMortality: flocks.reduce(
-        (total, flock) =>
-          total + (flock.initialPopulation - flock.currentPopulation),
+        (sum, flock) => sum + (flock.totalMortality || 0),
         0
       ),
     };
@@ -136,12 +138,12 @@ const FlocksPage = () => {
       });
 
       setFlockForm(emptyFlockForm);
-      setMessage("Flock batch created successfully.");
+      setMessage(t("common.success", "Flock batch created successfully."));
       await loadFlocks();
     } catch (requestError) {
       setFormError(
         requestError.response?.data?.message ||
-          "Unable to create the flock batch."
+          t("common.error", "Unable to create flock batch.")
       );
     } finally {
       setCreatingFlock(false);
@@ -163,12 +165,12 @@ const FlocksPage = () => {
       });
 
       setMortalityForm(emptyMortalityForm);
-      setMessage("Mortality record added. Flock population was updated.");
+      setMessage(t("common.success", "Mortality recorded successfully."));
       await loadFlocks();
     } catch (requestError) {
       setFormError(
         requestError.response?.data?.message ||
-          "Unable to record mortality."
+          t("common.error", "Unable to record mortality.")
       );
     } finally {
       setCreatingMortality(false);
@@ -218,27 +220,38 @@ const FlocksPage = () => {
           </Link>
 
         </nav>
+  const getStatusDisplay = (status) => {
+    if (status === "active") return t("common.active", "Active");
+    if (status === "closed" || status === "culled")
+      return t("common.culled", "Culled");
+    return status;
+  };
 
-        <div className="sidebar-user">
-          <strong>{user?.name}</strong>
-          <span>{user?.role}</span>
+  const getFlockTypeDisplay = (type) => {
+    if (type === "layer") return t("common.layer", "Layer");
+    if (type === "broiler") return t("common.broiler", "Broiler");
+    return type;
+  };
 
-          <button type="button" onClick={handleLogout}>
-            Sign out
-          </button>
-        </div>
-      </aside>
+  return (
+    <main className="farm-dashboard">
+      <DashboardSidebar user={user} onLogout={handleLogout} />
 
       <section className="dashboard-content">
         <header className="dashboard-header">
           <div>
-            <p className="eyebrow">Farm operations</p>
-            <h1>Flock Management</h1>
-            <p>Manage batches, track populations, and record mortality.</p>
+            <p className="eyebrow">{t("flocks.title", "Flock Management")}</p>
+            <h1>{t("flocks.title", "Flock Management")}</h1>
+            <p>
+              {t(
+                "flocks.subtitle",
+                "Manage batches, track populations, and record mortality."
+              )}
+            </p>
           </div>
 
           <button className="refresh-button" type="button" onClick={loadFlocks}>
-            Refresh data
+            {t("common.refresh", "Refresh data")}
           </button>
         </header>
 
@@ -248,22 +261,22 @@ const FlocksPage = () => {
 
         <section className="summary-grid">
           <article className="summary-card">
-            <span>Total batches</span>
+            <span>{t("flocks.allFilter", "Total batches")}</span>
             <strong>{summary.totalFlocks}</strong>
           </article>
 
           <article className="summary-card">
-            <span>Active flocks</span>
+            <span>{t("flocks.activeBatchesCount", "Active flocks")}</span>
             <strong>{summary.activeFlocks}</strong>
           </article>
 
           <article className="summary-card">
-            <span>Current population</span>
+            <span>{t("flocks.currentCountCol", "Current population")}</span>
             <strong>{formatNumber(summary.totalPopulation)}</strong>
           </article>
 
           <article className="summary-card mortality-card">
-            <span>Recorded mortality</span>
+            <span>{t("flocks.totalMortalityCount", "Recorded mortality")}</span>
             <strong>{formatNumber(summary.totalMortality)}</strong>
           </article>
         </section>
@@ -272,19 +285,24 @@ const FlocksPage = () => {
           <section className="management-panel">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">New batch</p>
-                <h2>Add a flock</h2>
+                <p className="eyebrow">{t("flocks.addBatch", "New batch")}</p>
+                <h2>{t("flocks.addFlockModalTitle", "Add a flock")}</h2>
               </div>
 
-              <span className="role-note">Manager / Admin access</span>
+              <span className="role-note">
+                {t("userManagement.managerRole", "Manager / Admin access")}
+              </span>
             </div>
 
             <form className="flock-form" onSubmit={handleCreateFlock}>
               <label>
-                Batch code
+                {t("flocks.batchCodeLabel", "Batch code")}
                 <input
                   name="batchCode"
-                  placeholder="e.g., LAY-001"
+                  placeholder={t(
+                    "flocks.batchCodePlaceholder",
+                    "e.g., LAY-001"
+                  )}
                   value={flockForm.batchCode}
                   onChange={handleFlockChange}
                   required
@@ -292,10 +310,13 @@ const FlocksPage = () => {
               </label>
 
               <label>
-                Breed
+                {t("flocks.breedLabel", "Breed")}
                 <input
                   name="breed"
-                  placeholder="e.g., Hy-Line Brown"
+                  placeholder={t(
+                    "flocks.breedPlaceholder",
+                    "e.g., Hy-Line Brown"
+                  )}
                   value={flockForm.breed}
                   onChange={handleFlockChange}
                   required
@@ -303,21 +324,23 @@ const FlocksPage = () => {
               </label>
 
               <label>
-                Flock type
+                {t("flocks.flockTypeLabel", "Flock type")}
                 <select
                   name="flockType"
                   value={flockForm.flockType}
                   onChange={handleFlockChange}
                 >
-                  <option value="layer">Layer</option>
-                  <option value="broiler">Broiler</option>
+                  <option value="layer">{t("common.layer", "Layer")}</option>
+                  <option value="broiler">
+                    {t("common.broiler", "Broiler")}
+                  </option>
                   <option value="breeder">Breeder</option>
-                  <option value="other">Other</option>
+                  <option value="other">{t("common.other", "Other")}</option>
                 </select>
               </label>
 
               <label>
-                Placement date
+                {t("flocks.placementDateLabel", "Placement date")}
                 <input
                   type="date"
                   name="placementDate"
@@ -328,12 +351,15 @@ const FlocksPage = () => {
               </label>
 
               <label>
-                Initial population
+                {t("flocks.initialPopulationLabel", "Initial population")}
                 <input
                   type="number"
                   name="initialPopulation"
                   min="1"
-                  placeholder="e.g., 500"
+                  placeholder={t(
+                    "flocks.initialPopulationPlaceholder",
+                    "e.g., 500"
+                  )}
                   value={flockForm.initialPopulation}
                   onChange={handleFlockChange}
                   required
@@ -341,20 +367,26 @@ const FlocksPage = () => {
               </label>
 
               <label>
-                Hatchery / source
+                {t("flocks.sourceLabel", "Hatchery / source")}
                 <input
                   name="source"
-                  placeholder="e.g., ABC Hatchery"
+                  placeholder={t(
+                    "flocks.sourcePlaceholder",
+                    "e.g., ABC Hatchery"
+                  )}
                   value={flockForm.source}
                   onChange={handleFlockChange}
                 />
               </label>
 
               <label className="form-wide">
-                Notes
+                {t("flocks.notesLabel", "Notes")}
                 <input
                   name="notes"
-                  placeholder="Optional batch notes"
+                  placeholder={t(
+                    "flocks.notesPlaceholder",
+                    "Optional batch notes"
+                  )}
                   value={flockForm.notes}
                   onChange={handleFlockChange}
                 />
@@ -365,7 +397,9 @@ const FlocksPage = () => {
                 type="submit"
                 disabled={creatingFlock}
               >
-                {creatingFlock ? "Creating batch..." : "Create flock batch"}
+                {creatingFlock
+                  ? t("flocks.creatingFlock", "Creating batch...")
+                  : t("flocks.createFlockBtn", "Create flock batch")}
               </button>
             </form>
           </section>
@@ -374,22 +408,32 @@ const FlocksPage = () => {
         <section className="management-panel">
           <div className="panel-heading">
             <div>
-              <p className="eyebrow">Live records</p>
-              <h2>Flock batches</h2>
+              <p className="eyebrow">{t("flocks.title", "Live records")}</p>
+              <h2>{t("flocks.flockListTitle", "Flock batches")}</h2>
             </div>
 
-            <span className="role-note">{flocks.length} records</span>
+            <span className="role-note">
+              {flocks.length} {t("common.units", "records")}
+            </span>
           </div>
 
           {loading ? (
-            <p className="loading-text">Loading flock records...</p>
+            <p className="loading-text">
+              {t("common.loading", "Loading flock records...")}
+            </p>
           ) : flocks.length === 0 ? (
             <div className="empty-state">
-              <h3>No flock batches yet</h3>
+              <h3>{t("flocks.noFlocksMatch", "No flock batches yet")}</h3>
               <p>
                 {canManageFlocks
-                  ? "Create your first flock batch using the form above."
-                  : "Ask a manager or administrator to create your first flock batch."}
+                  ? t(
+                      "flocks.addFlockModalTitle",
+                      "Create your first flock batch using the form above."
+                    )
+                  : t(
+                      "dashboard.noActiveFlocks",
+                      "Ask a manager or administrator to create your first flock batch."
+                    )}
               </p>
             </div>
           ) : (
@@ -397,11 +441,11 @@ const FlocksPage = () => {
               <table className="flock-table">
                 <thead>
                   <tr>
-                    <th>Batch</th>
-                    <th>Breed / Type</th>
-                    <th>Population</th>
-                    <th>Status</th>
-                    <th>Placement</th>
+                    <th>{t("flocks.batchCodeCol", "Batch")}</th>
+                    <th>{t("flocks.breedCol", "Breed / Type")}</th>
+                    <th>{t("flocks.currentCountCol", "Population")}</th>
+                    <th>{t("flocks.statusCol", "Status")}</th>
+                    <th>{t("flocks.placementDateCol", "Placement")}</th>
                     <th />
                   </tr>
                 </thead>
@@ -411,24 +455,30 @@ const FlocksPage = () => {
                     <tr key={flock._id}>
                       <td>
                         <strong>{flock.batchCode}</strong>
-                        <span>{flock.source || "No source recorded"}</span>
+                        <span>
+                          {flock.source ||
+                            t("common.noData", "No source recorded")}
+                        </span>
                       </td>
 
                       <td>
                         <strong>{flock.breed}</strong>
-                        <span className="capitalize">{flock.flockType}</span>
+                        <span className="capitalize">
+                          {getFlockTypeDisplay(flock.flockType)}
+                        </span>
                       </td>
 
                       <td>
                         <strong>{formatNumber(flock.currentPopulation)}</strong>
                         <span>
-                          of {formatNumber(flock.initialPopulation)} birds
+                          of {formatNumber(flock.initialPopulation)}{" "}
+                          {t("common.units", "birds")}
                         </span>
                       </td>
 
                       <td>
                         <span className={`status-badge ${flock.status}`}>
-                          {flock.status}
+                          {getStatusDisplay(flock.status)}
                         </span>
                       </td>
 
@@ -443,7 +493,7 @@ const FlocksPage = () => {
                             type="button"
                             onClick={() => startMortalityRecord(flock._id)}
                           >
-                            Record mortality
+                            {t("flocks.logMortality", "Record mortality")}
                           </button>
                         )}
                       </td>
@@ -458,23 +508,29 @@ const FlocksPage = () => {
         <section id="mortality-form" className="management-panel">
           <div className="panel-heading">
             <div>
-              <p className="eyebrow">Daily operation</p>
-              <h2>Record mortality</h2>
+              <p className="eyebrow">
+                {t("dashboard.title", "Daily operation")}
+              </p>
+              <h2>{t("flocks.logMortalityModalTitle", "Record mortality")}</h2>
             </div>
 
-            <span className="role-note">Available to all farm users</span>
+            <span className="role-note">
+              {t("userManagement.workerRole", "Available to all farm users")}
+            </span>
           </div>
 
           <form className="flock-form" onSubmit={handleCreateMortality}>
             <label>
-              Flock batch
+              {t("flocks.selectFlockLabel", "Flock batch")}
               <select
                 name="flockId"
                 value={mortalityForm.flockId}
                 onChange={handleMortalityChange}
                 required
               >
-                <option value="">Select an active flock</option>
+                <option value="">
+                  {t("flocks.selectFlockPlaceholder", "Select an active flock")}
+                </option>
 
                 {flocks
                   .filter((flock) => flock.status === "active")
@@ -487,7 +543,7 @@ const FlocksPage = () => {
             </label>
 
             <label>
-              Date
+              {t("flocks.mortalityDateLabel", "Date")}
               <input
                 type="date"
                 name="date"
@@ -498,12 +554,12 @@ const FlocksPage = () => {
             </label>
 
             <label>
-              Number of birds
+              {t("flocks.mortalityCountLabel", "Number of birds")}
               <input
                 type="number"
                 name="count"
                 min="1"
-                placeholder="e.g., 2"
+                placeholder={t("flocks.mortalityCountPlaceholder", "e.g., 2")}
                 value={mortalityForm.count}
                 onChange={handleMortalityChange}
                 required
@@ -511,20 +567,26 @@ const FlocksPage = () => {
             </label>
 
             <label>
-              Cause
+              {t("flocks.causeLabel", "Cause")}
               <input
                 name="cause"
-                placeholder="e.g., Heat stress"
+                placeholder={t(
+                  "flocks.causePlaceholder",
+                  "e.g., Heat stress"
+                )}
                 value={mortalityForm.cause}
                 onChange={handleMortalityChange}
               />
             </label>
 
             <label className="form-wide">
-              Notes
+              {t("flocks.notesLabel", "Notes")}
               <input
                 name="notes"
-                placeholder="Optional inspection notes"
+                placeholder={t(
+                  "flocks.notesPlaceholder",
+                  "Optional inspection notes"
+                )}
                 value={mortalityForm.notes}
                 onChange={handleMortalityChange}
               />
@@ -536,8 +598,8 @@ const FlocksPage = () => {
               disabled={creatingMortality}
             >
               {creatingMortality
-                ? "Saving record..."
-                : "Save mortality record"}
+                ? t("flocks.recordingMortality", "Saving record...")
+                : t("flocks.recordMortalityBtn", "Save mortality record")}
             </button>
           </form>
         </section>

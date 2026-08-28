@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
+import DashboardSidebar from "../components/DashboardSidebar";
 
 const today = new Date().toISOString().slice(0, 10);
 
@@ -29,11 +31,14 @@ const emptyTransactionForm = {
 };
 
 const formatNumber = (value) =>
-  new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(value || 0);
+  new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(
+    value || 0
+  );
 
 const InventoryPage = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -59,7 +64,7 @@ const InventoryPage = () => {
     } catch (requestError) {
       setPageError(
         requestError.response?.data?.message ||
-          "Unable to load inventory records."
+          t("inventory.noItemsMatch", "Unable to load inventory records.")
       );
     } finally {
       setLoading(false);
@@ -116,12 +121,12 @@ const InventoryPage = () => {
       });
 
       setItemForm(emptyItemForm);
-      setMessage("Inventory item created successfully.");
+      setMessage(t("common.success", "Inventory item created successfully."));
       await loadItems();
     } catch (requestError) {
       setFormError(
         requestError.response?.data?.message ||
-          "Unable to create inventory item."
+          t("common.error", "Unable to create inventory item.")
       );
     } finally {
       setCreatingItem(false);
@@ -146,12 +151,14 @@ const InventoryPage = () => {
       });
 
       setTransactionForm(emptyTransactionForm);
-      setMessage("Stock transaction saved successfully.");
+      setMessage(
+        t("common.success", "Stock transaction saved successfully.")
+      );
       await loadItems();
     } catch (requestError) {
       setFormError(
         requestError.response?.data?.message ||
-          "Unable to save stock transaction."
+          t("common.error", "Unable to save stock transaction.")
       );
     } finally {
       setCreatingTransaction(false);
@@ -203,17 +210,23 @@ const InventoryPage = () => {
           </button>
         </div>
       </aside>
+      <DashboardSidebar user={user} onLogout={handleLogout} />
 
       <section className="dashboard-content">
         <header className="dashboard-header">
           <div>
-            <p className="eyebrow">Farm operations</p>
-            <h1>Feed & Inventory</h1>
-            <p>Track feed, medicine, vaccines, equipment, and supplies.</p>
+            <p className="eyebrow">{t("inventory.title", "Farm operations")}</p>
+            <h1>{t("inventory.title", "Feed & Inventory")}</h1>
+            <p>
+              {t(
+                "inventory.subtitle",
+                "Track feed, medicine, vaccines, equipment, and supplies."
+              )}
+            </p>
           </div>
 
           <button className="refresh-button" type="button" onClick={loadItems}>
-            Refresh data
+            {t("common.refresh", "Refresh data")}
           </button>
         </header>
 
@@ -223,19 +236,19 @@ const InventoryPage = () => {
 
         <section className="summary-grid">
           <article className="summary-card">
-            <span>Total inventory items</span>
+            <span>{t("inventory.totalItems", "Total inventory items")}</span>
             <strong>{summary.totalItems}</strong>
           </article>
           <article className="summary-card mortality-card">
-            <span>Low-stock alerts</span>
+            <span>{t("inventory.lowStockItems", "Low-stock alerts")}</span>
             <strong>{summary.lowStockItems}</strong>
           </article>
           <article className="summary-card">
-            <span>Feed item types</span>
+            <span>{t("inventory.categoriesCount", "Feed item types")}</span>
             <strong>{summary.feedItems}</strong>
           </article>
           <article className="summary-card">
-            <span>Estimated stock value</span>
+            <span>{t("inventory.currentStockCol", "Estimated stock value")}</span>
             <strong>Rs. {formatNumber(summary.totalStockValue)}</strong>
           </article>
         </section>
@@ -244,18 +257,23 @@ const InventoryPage = () => {
           <section className="management-panel">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">New item</p>
-                <h2>Add inventory item</h2>
+                <p className="eyebrow">{t("inventory.addNewItem", "New item")}</p>
+                <h2>{t("inventory.addItemModalTitle", "Add inventory item")}</h2>
               </div>
-              <span className="role-note">Manager / Admin access</span>
+              <span className="role-note">
+                {t("userManagement.managerRole", "Manager / Admin access")}
+              </span>
             </div>
 
             <form className="flock-form" onSubmit={handleCreateItem}>
               <label>
-                Item name
+                {t("inventory.itemNameLabel", "Item name")}
                 <input
                   name="name"
-                  placeholder="e.g., Layer Mash Feed"
+                  placeholder={t(
+                    "inventory.itemNamePlaceholder",
+                    "e.g., Layer Mash Feed"
+                  )}
                   value={itemForm.name}
                   onChange={handleItemChange}
                   required
@@ -263,41 +281,53 @@ const InventoryPage = () => {
               </label>
 
               <label>
-                Category
+                {t("inventory.categoryLabel", "Category")}
                 <select
                   name="category"
                   value={itemForm.category}
                   onChange={handleItemChange}
                 >
-                  <option value="feed">Feed</option>
-                  <option value="medicine">Medicine</option>
-                  <option value="vaccine">Vaccine</option>
-                  <option value="equipment">Equipment</option>
-                  <option value="supplies">Supplies</option>
+                  <option value="feed">{t("common.feed", "Feed")}</option>
+                  <option value="medicine">
+                    {t("common.medication", "Medicine")}
+                  </option>
+                  <option value="vaccine">
+                    {t("productionHealth.eventVaccination", "Vaccine")}
+                  </option>
+                  <option value="equipment">
+                    {t("common.equipment", "Equipment")}
+                  </option>
+                  <option value="supplies">
+                    {t("common.other", "Supplies")}
+                  </option>
                 </select>
               </label>
 
               <label>
-                Unit
+                {t("inventory.unitLabel", "Unit")}
                 <select
                   name="unit"
                   value={itemForm.unit}
                   onChange={handleItemChange}
                 >
-                  <option value="kg">Kilograms (kg)</option>
+                  <option value="kg">{t("common.kg", "Kilograms (kg)")}</option>
                   <option value="g">Grams (g)</option>
-                  <option value="litre">Litres</option>
+                  <option value="litre">
+                    {t("common.litres", "Litres")}
+                  </option>
                   <option value="ml">Millilitres (ml)</option>
-                  <option value="bag">Bags</option>
-                  <option value="bottle">Bottles</option>
+                  <option value="bag">{t("common.bags", "Bags")}</option>
+                  <option value="bottle">
+                    {t("common.bottles", "Bottles")}
+                  </option>
                   <option value="dose">Doses</option>
-                  <option value="piece">Pieces</option>
+                  <option value="piece">{t("common.units", "Pieces")}</option>
                   <option value="box">Boxes</option>
                 </select>
               </label>
 
               <label>
-                Opening stock
+                {t("inventory.quantityLabel", "Opening stock")}
                 <input
                   type="number"
                   name="openingStock"
@@ -310,7 +340,7 @@ const InventoryPage = () => {
               </label>
 
               <label>
-                Low-stock level
+                {t("inventory.minThresholdLabel", "Low-stock level")}
                 <input
                   type="number"
                   name="reorderLevel"
@@ -336,17 +366,20 @@ const InventoryPage = () => {
               </label>
 
               <label>
-                Supplier
+                {t("inventory.supplierLabel", "Supplier")}
                 <input
                   name="supplier"
-                  placeholder="e.g., Farm Supply Lanka"
+                  placeholder={t(
+                    "inventory.supplierPlaceholder",
+                    "e.g., Farm Supply Lanka"
+                  )}
                   value={itemForm.supplier}
                   onChange={handleItemChange}
                 />
               </label>
 
               <label>
-                Expiry date
+                {t("common.date", "Expiry date")}
                 <input
                   type="date"
                   name="expiryDate"
@@ -356,17 +389,26 @@ const InventoryPage = () => {
               </label>
 
               <label className="form-wide">
-                Notes
+                {t("inventory.notesLabel", "Notes")}
                 <input
                   name="notes"
-                  placeholder="Optional inventory notes"
+                  placeholder={t(
+                    "inventory.notesPlaceholder",
+                    "Optional inventory notes"
+                  )}
                   value={itemForm.notes}
                   onChange={handleItemChange}
                 />
               </label>
 
-              <button className="form-wide" type="submit" disabled={creatingItem}>
-                {creatingItem ? "Creating item..." : "Create inventory item"}
+              <button
+                className="form-wide"
+                type="submit"
+                disabled={creatingItem}
+              >
+                {creatingItem
+                  ? t("inventory.addingItem", "Creating item...")
+                  : t("inventory.addItemBtn", "Create inventory item")}
               </button>
             </form>
           </section>
@@ -375,28 +417,39 @@ const InventoryPage = () => {
         <section className="management-panel">
           <div className="panel-heading">
             <div>
-              <p className="eyebrow">Current stock</p>
-              <h2>Inventory records</h2>
+              <p className="eyebrow">{t("inventory.title", "Current stock")}</p>
+              <h2>
+                {t("inventory.inventoryListTitle", "Inventory records")}
+              </h2>
             </div>
-            <span className="role-note">{items.length} active items</span>
+            <span className="role-note">
+              {items.length} {t("common.active", "active items")}
+            </span>
           </div>
 
           {loading ? (
-            <p className="loading-text">Loading inventory records...</p>
+            <p className="loading-text">
+              {t("common.loading", "Loading inventory records...")}
+            </p>
           ) : items.length === 0 ? (
             <div className="empty-state">
-              <h3>No inventory items yet</h3>
-              <p>Add your first feed, medicine, vaccine, or supply item.</p>
+              <h3>{t("inventory.noItemsMatch", "No inventory items yet")}</h3>
+              <p>
+                {t(
+                  "inventory.addItemModalTitle",
+                  "Add your first feed, medicine, vaccine, or supply item."
+                )}
+              </p>
             </div>
           ) : (
             <div className="flock-table-wrap">
               <table className="flock-table">
                 <thead>
                   <tr>
-                    <th>Item</th>
-                    <th>Category</th>
-                    <th>Current stock</th>
-                    <th>Low-stock level</th>
+                    <th>{t("inventory.itemNameCol", "Item")}</th>
+                    <th>{t("inventory.categoryCol", "Category")}</th>
+                    <th>{t("inventory.currentStockCol", "Current stock")}</th>
+                    <th>{t("inventory.minAlertCol", "Low-stock level")}</th>
                     <th>Value</th>
                     <th />
                   </tr>
@@ -410,7 +463,10 @@ const InventoryPage = () => {
                       <tr key={item._id}>
                         <td>
                           <strong>{item.name}</strong>
-                          <span>{item.supplier || "No supplier recorded"}</span>
+                          <span>
+                            {item.supplier ||
+                              t("common.noData", "No supplier recorded")}
+                          </span>
                         </td>
                         <td>
                           <span className="capitalize">{item.category}</span>
@@ -420,7 +476,9 @@ const InventoryPage = () => {
                             {formatNumber(item.currentStock)} {item.unit}
                           </strong>
                           {isLowStock && (
-                            <span className="low-stock-text">Low stock</span>
+                            <span className="low-stock-text">
+                              {t("common.lowStock", "Low stock")}
+                            </span>
                           )}
                         </td>
                         <td>
@@ -436,7 +494,7 @@ const InventoryPage = () => {
                             type="button"
                             onClick={() => startTransaction(item)}
                           >
-                            Record stock
+                            {t("inventory.adjustStock", "Record stock")}
                           </button>
                         </td>
                       </tr>
@@ -451,22 +509,30 @@ const InventoryPage = () => {
         <section id="stock-transaction-form" className="management-panel">
           <div className="panel-heading">
             <div>
-              <p className="eyebrow">Daily operation</p>
-              <h2>Record stock movement</h2>
+              <p className="eyebrow">
+                {t("dashboard.title", "Daily operation")}
+              </p>
+              <h2>
+                {t("inventory.adjustStockModalTitle", "Record stock movement")}
+              </h2>
             </div>
-            <span className="role-note">Available to all farm users</span>
+            <span className="role-note">
+              {t("userManagement.workerRole", "Available to all farm users")}
+            </span>
           </div>
 
           <form className="flock-form" onSubmit={handleCreateTransaction}>
             <label>
-              Inventory item
+              {t("inventory.selectItemLabel", "Inventory item")}
               <select
                 name="itemId"
                 value={transactionForm.itemId}
                 onChange={handleTransactionChange}
                 required
               >
-                <option value="">Select an item</option>
+                <option value="">
+                  {t("inventory.selectItemPlaceholder", "Select an item")}
+                </option>
                 {items.map((item) => (
                   <option key={item._id} value={item._id}>
                     {item.name} — {item.currentStock} {item.unit}
@@ -476,15 +542,21 @@ const InventoryPage = () => {
             </label>
 
             <label>
-              Movement type
+              {t("inventory.adjustmentTypeLabel", "Movement type")}
               <select
                 name="transactionType"
                 value={transactionForm.transactionType}
                 onChange={handleTransactionChange}
               >
-                <option value="usage">Usage</option>
-                <option value="stock-in">Stock received</option>
-                <option value="adjustment">Stock adjustment</option>
+                <option value="usage">
+                  {t("inventory.typeDeduct", "Usage")}
+                </option>
+                <option value="stock-in">
+                  {t("inventory.typeAdd", "Stock received")}
+                </option>
+                <option value="adjustment">
+                  {t("inventory.typeAudit", "Stock adjustment")}
+                </option>
                 <option value="wastage">Wastage / damage</option>
               </select>
             </label>
@@ -496,13 +568,13 @@ const InventoryPage = () => {
                 value={transactionForm.direction}
                 onChange={handleTransactionChange}
               >
-                <option value="decrease">Decrease</option>
-                <option value="increase">Increase</option>
+                <option value="decrease">Decrease (-)</option>
+                <option value="increase">Increase (+)</option>
               </select>
             </label>
 
             <label>
-              Quantity
+              {t("inventory.adjustQuantityLabel", "Quantity")}
               <input
                 type="number"
                 name="quantity"
@@ -528,7 +600,7 @@ const InventoryPage = () => {
             </label>
 
             <label>
-              Transaction date
+              {t("common.date", "Transaction date")}
               <input
                 type="date"
                 name="date"
@@ -539,20 +611,26 @@ const InventoryPage = () => {
             </label>
 
             <label>
-              Reference
+              {t("inventory.reasonLabel", "Reference")}
               <input
                 name="reference"
-                placeholder="e.g., Daily feeding"
+                placeholder={t(
+                  "inventory.reasonPlaceholder",
+                  "e.g., Daily feeding"
+                )}
                 value={transactionForm.reference}
                 onChange={handleTransactionChange}
               />
             </label>
 
             <label className="form-wide">
-              Notes
+              {t("inventory.notesLabel", "Notes")}
               <input
                 name="notes"
-                placeholder="Optional transaction notes"
+                placeholder={t(
+                  "inventory.notesPlaceholder",
+                  "Optional transaction notes"
+                )}
                 value={transactionForm.notes}
                 onChange={handleTransactionChange}
               />
@@ -564,8 +642,8 @@ const InventoryPage = () => {
               disabled={creatingTransaction}
             >
               {creatingTransaction
-                ? "Saving transaction..."
-                : "Save stock transaction"}
+                ? t("inventory.adjustingStock", "Saving transaction...")
+                : t("inventory.adjustStockBtn", "Save stock transaction")}
             </button>
           </form>
         </section>

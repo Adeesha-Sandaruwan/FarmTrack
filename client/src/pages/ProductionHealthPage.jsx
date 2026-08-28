@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
+import DashboardSidebar from "../components/DashboardSidebar";
 
 const today = new Date().toISOString().slice(0, 10);
 
@@ -35,6 +37,7 @@ const titleCase = (value) =>
 const ProductionHealthPage = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
 
   const [flocks, setFlocks] = useState([]);
   const [productionRecords, setProductionRecords] = useState([]);
@@ -66,7 +69,7 @@ const ProductionHealthPage = () => {
     } catch (requestError) {
       setError(
         requestError.response?.data?.message ||
-          "Unable to load production and health records."
+          t("common.error", "Unable to load production and health records.")
       );
     } finally {
       setLoading(false);
@@ -116,8 +119,8 @@ const ProductionHealthPage = () => {
       0
     );
 
-    const criticalRecords = healthRecords.filter(
-      (record) => ["high", "critical"].includes(record.severity)
+    const criticalRecords = healthRecords.filter((record) =>
+      ["high", "critical"].includes(record.severity)
     ).length;
 
     return {
@@ -145,12 +148,14 @@ const ProductionHealthPage = () => {
       });
 
       setProductionForm(emptyProductionForm);
-      setMessage("Daily production record saved.");
+      setMessage(
+        t("common.success", "Daily production record saved.")
+      );
       await loadData();
     } catch (requestError) {
       setError(
         requestError.response?.data?.message ||
-          "Unable to save the production record."
+          t("common.error", "Unable to save the production record.")
       );
     } finally {
       setSavingProduction(false);
@@ -173,12 +178,12 @@ const ProductionHealthPage = () => {
       });
 
       setHealthForm(emptyHealthForm);
-      setMessage("Health record saved.");
+      setMessage(t("common.success", "Health record saved."));
       await loadData();
     } catch (requestError) {
       setError(
         requestError.response?.data?.message ||
-          "Unable to save the health record."
+          t("common.error", "Unable to save the health record.")
       );
     } finally {
       setSavingHealth(false);
@@ -215,17 +220,25 @@ const ProductionHealthPage = () => {
           </button>
         </div>
       </aside>
+      <DashboardSidebar user={user} onLogout={handleLogout} />
 
       <section className="dashboard-content">
         <header className="dashboard-header">
           <div>
-            <p className="eyebrow">Farm operations</p>
-            <h1>Production & Health</h1>
-            <p>Record eggs, monitor weights, and maintain flock health.</p>
+            <p className="eyebrow">
+              {t("productionHealth.title", "Farm operations")}
+            </p>
+            <h1>{t("productionHealth.title", "Production & Health")}</h1>
+            <p>
+              {t(
+                "productionHealth.subtitle",
+                "Record eggs, monitor weights, and maintain flock health."
+              )}
+            </p>
           </div>
 
           <button className="refresh-button" type="button" onClick={loadData}>
-            Refresh data
+            {t("common.refresh", "Refresh data")}
           </button>
         </header>
 
@@ -234,19 +247,19 @@ const ProductionHealthPage = () => {
 
         <section className="summary-grid">
           <article className="summary-card">
-            <span>Total eggs recorded</span>
+            <span>{t("productionHealth.totalEggsLabel", "Total eggs recorded")}</span>
             <strong>{formatNumber(summary.totalEggs)}</strong>
           </article>
           <article className="summary-card">
-            <span>Good eggs</span>
+            <span>{t("productionHealth.goodEggsLabel", "Good eggs")}</span>
             <strong>{formatNumber(summary.healthyEggs)}</strong>
           </article>
           <article className="summary-card mortality-card">
-            <span>Damaged eggs</span>
+            <span>{t("productionHealth.damagedEggsLabel", "Damaged eggs")}</span>
             <strong>{formatNumber(summary.damagedEggs)}</strong>
           </article>
           <article className="summary-card">
-            <span>Health alerts</span>
+            <span>{t("productionHealth.healthIncidents", "Health alerts")}</span>
             <strong>{summary.criticalRecords}</strong>
           </article>
         </section>
@@ -255,14 +268,14 @@ const ProductionHealthPage = () => {
           <section className="management-panel">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">Daily operation</p>
-                <h2>Record production</h2>
+                <p className="eyebrow">{t("dashboard.title", "Daily operation")}</p>
+                <h2>{t("productionHealth.eggModalTitle", "Record production")}</h2>
               </div>
             </div>
 
             <form className="flock-form" onSubmit={handleProductionSubmit}>
               <label className="form-wide">
-                Flock batch
+                {t("productionHealth.selectFlock", "Flock batch")}
                 <select
                   value={productionForm.flock}
                   onChange={(event) =>
@@ -273,7 +286,9 @@ const ProductionHealthPage = () => {
                   }
                   required
                 >
-                  <option value="">Select an active flock</option>
+                  <option value="">
+                    {t("productionHealth.selectFlock", "Select an active flock")}
+                  </option>
                   {flocks.map((flock) => (
                     <option key={flock._id} value={flock._id}>
                       {flock.batchCode} — {flock.breed}
@@ -283,7 +298,7 @@ const ProductionHealthPage = () => {
               </label>
 
               <label>
-                Record date
+                {t("productionHealth.collectionDate", "Record date")}
                 <input
                   type="date"
                   value={productionForm.date}
@@ -298,7 +313,7 @@ const ProductionHealthPage = () => {
               </label>
 
               <label>
-                Total eggs
+                {t("productionHealth.totalEggsLabel", "Total eggs")}
                 <input
                   type="number"
                   min="0"
@@ -315,7 +330,7 @@ const ProductionHealthPage = () => {
               </label>
 
               <label>
-                Damaged eggs
+                {t("productionHealth.damagedEggsLabel", "Damaged eggs")}
                 <input
                   type="number"
                   min="0"
@@ -331,12 +346,12 @@ const ProductionHealthPage = () => {
               </label>
 
               <label>
-                Average bird weight (g)
+                {t("productionHealth.avgWeightLabel", "Average bird weight (g)")}
                 <input
                   type="number"
                   min="0"
                   step="0.01"
-                  placeholder="Optional"
+                  placeholder={t("productionHealth.weightPlaceholder", "Optional")}
                   value={productionForm.averageBirdWeight}
                   onChange={(event) =>
                     setProductionForm({
@@ -348,7 +363,7 @@ const ProductionHealthPage = () => {
               </label>
 
               <label className="form-wide">
-                Notes
+                {t("common.notes", "Notes")}
                 <input
                   placeholder="Optional production notes"
                   value={productionForm.notes}
@@ -367,8 +382,8 @@ const ProductionHealthPage = () => {
                 disabled={savingProduction}
               >
                 {savingProduction
-                  ? "Saving production..."
-                  : "Save production record"}
+                  ? t("productionHealth.loggingEggs", "Saving production...")
+                  : t("productionHealth.saveEggRecord", "Save production record")}
               </button>
             </form>
           </section>
@@ -376,14 +391,14 @@ const ProductionHealthPage = () => {
           <section className="management-panel">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">Health log</p>
-                <h2>Add health record</h2>
+                <p className="eyebrow">{t("productionHealth.healthRecordsTitle", "Health log")}</p>
+                <h2>{t("productionHealth.healthModalTitle", "Add health record")}</h2>
               </div>
             </div>
 
             <form className="flock-form" onSubmit={handleHealthSubmit}>
               <label>
-                Flock batch
+                {t("flocks.selectFlockLabel", "Flock batch")}
                 <select
                   value={healthForm.flock}
                   onChange={(event) =>
@@ -391,7 +406,9 @@ const ProductionHealthPage = () => {
                   }
                   required
                 >
-                  <option value="">Select an active flock</option>
+                  <option value="">
+                    {t("flocks.selectFlockPlaceholder", "Select an active flock")}
+                  </option>
                   {flocks.map((flock) => (
                     <option key={flock._id} value={flock._id}>
                       {flock.batchCode} — {flock.breed}
@@ -401,7 +418,7 @@ const ProductionHealthPage = () => {
               </label>
 
               <label>
-                Record type
+                {t("productionHealth.eventTypeLabel", "Record type")}
                 <select
                   value={healthForm.recordType}
                   onChange={(event) =>
@@ -411,15 +428,23 @@ const ProductionHealthPage = () => {
                     })
                   }
                 >
-                  <option value="vaccination">Vaccination</option>
-                  <option value="treatment">Treatment</option>
-                  <option value="incident">Health incident</option>
-                  <option value="weight-check">Weight check</option>
+                  <option value="vaccination">
+                    {t("productionHealth.eventVaccination", "Vaccination")}
+                  </option>
+                  <option value="treatment">
+                    {t("productionHealth.eventMedication", "Treatment")}
+                  </option>
+                  <option value="incident">
+                    {t("productionHealth.eventDisease", "Health incident")}
+                  </option>
+                  <option value="weight-check">
+                    {t("productionHealth.logWeight", "Weight check")}
+                  </option>
                 </select>
               </label>
 
               <label>
-                Date
+                {t("common.date", "Date")}
                 <input
                   type="date"
                   value={healthForm.date}
@@ -431,9 +456,12 @@ const ProductionHealthPage = () => {
               </label>
 
               <label className="form-wide">
-                Title
+                {t("productionHealth.eventDetailsLabel", "Title")}
                 <input
-                  placeholder="e.g., Newcastle disease vaccination"
+                  placeholder={t(
+                    "productionHealth.eventDetailsPlaceholder",
+                    "e.g., Newcastle disease vaccination"
+                  )}
                   value={healthForm.title}
                   onChange={(event) =>
                     setHealthForm({ ...healthForm, title: event.target.value })
@@ -443,7 +471,7 @@ const ProductionHealthPage = () => {
               </label>
 
               <label>
-                Medicine / vaccine
+                {t("productionHealth.treatmentLabel", "Medicine / vaccine")}
                 <input
                   placeholder="e.g., LaSota vaccine"
                   value={healthForm.medicineOrVaccine}
@@ -457,9 +485,12 @@ const ProductionHealthPage = () => {
               </label>
 
               <label>
-                Dosage
+                {t("productionHealth.treatmentLabel", "Dosage")}
                 <input
-                  placeholder="e.g., 1 dose per bird"
+                  placeholder={t(
+                    "productionHealth.treatmentPlaceholder",
+                    "e.g., 1 dose per bird"
+                  )}
                   value={healthForm.dosage}
                   onChange={(event) =>
                     setHealthForm({ ...healthForm, dosage: event.target.value })
@@ -468,7 +499,7 @@ const ProductionHealthPage = () => {
               </label>
 
               <label>
-                Quantity
+                {t("common.quantity", "Quantity")}
                 <input
                   type="number"
                   min="0"
@@ -481,7 +512,7 @@ const ProductionHealthPage = () => {
               </label>
 
               <label>
-                Severity
+                {t("common.status", "Severity")}
                 <select
                   value={healthForm.severity}
                   onChange={(event) =>
@@ -499,7 +530,7 @@ const ProductionHealthPage = () => {
               </label>
 
               <label>
-                Next due date
+                {t("common.date", "Next due date")}
                 <input
                   type="date"
                   value={healthForm.nextDueDate}
@@ -513,7 +544,7 @@ const ProductionHealthPage = () => {
               </label>
 
               <label className="form-wide">
-                Description
+                {t("productionHealth.detailsCol", "Description")}
                 <input
                   placeholder="Optional observations or treatment details"
                   value={healthForm.description}
@@ -531,7 +562,9 @@ const ProductionHealthPage = () => {
                 type="submit"
                 disabled={savingHealth}
               >
-                {savingHealth ? "Saving health record..." : "Save health record"}
+                {savingHealth
+                  ? t("productionHealth.loggingHealth", "Saving health record...")
+                  : t("productionHealth.saveHealthRecord", "Save health record")}
               </button>
             </form>
           </section>
@@ -541,30 +574,32 @@ const ProductionHealthPage = () => {
           <section className="management-panel">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">Recent entries</p>
-                <h2>Production history</h2>
+                <p className="eyebrow">{t("dashboard.recentActivity", "Recent entries")}</p>
+                <h2>{t("productionHealth.eggRecordsTitle", "Production history")}</h2>
               </div>
-              <span className="role-note">{productionRecords.length} records</span>
+              <span className="role-note">
+                {productionRecords.length} {t("common.units", "records")}
+              </span>
             </div>
 
             {loading ? (
-              <p className="loading-text">Loading production records...</p>
+              <p className="loading-text">{t("common.loading", "Loading production records...")}</p>
             ) : (
               <div className="flock-table-wrap">
                 <table className="flock-table">
                   <thead>
                     <tr>
-                      <th>Date</th>
-                      <th>Flock</th>
-                      <th>Total eggs</th>
-                      <th>Damaged</th>
+                      <th>{t("productionHealth.dateCol", "Date")}</th>
+                      <th>{t("productionHealth.batchCol", "Flock")}</th>
+                      <th>{t("productionHealth.totalEggsCol", "Total eggs")}</th>
+                      <th>{t("productionHealth.damagedEggsCol", "Damaged")}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {productionRecords.slice(0, 8).map((record) => (
                       <tr key={record._id}>
                         <td>{new Date(record.date).toLocaleDateString()}</td>
-                        <td>{record.flock?.batchCode || "Unknown flock"}</td>
+                        <td>{record.flock?.batchCode || t("common.other", "Unknown flock")}</td>
                         <td>{formatNumber(record.eggCount)}</td>
                         <td>{formatNumber(record.damagedEggs)}</td>
                       </tr>
@@ -578,14 +613,16 @@ const ProductionHealthPage = () => {
           <section className="management-panel">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">Recent entries</p>
-                <h2>Health history</h2>
+                <p className="eyebrow">{t("dashboard.recentActivity", "Recent entries")}</p>
+                <h2>{t("productionHealth.healthRecordsTitle", "Health history")}</h2>
               </div>
-              <span className="role-note">{healthRecords.length} records</span>
+              <span className="role-note">
+                {healthRecords.length} {t("common.units", "records")}
+              </span>
             </div>
 
             {loading ? (
-              <p className="loading-text">Loading health records...</p>
+              <p className="loading-text">{t("common.loading", "Loading health records...")}</p>
             ) : (
               <div className="health-list">
                 {healthRecords.slice(0, 6).map((record) => (
@@ -593,7 +630,7 @@ const ProductionHealthPage = () => {
                     <div>
                       <strong>{record.title}</strong>
                       <span>
-                        {record.flock?.batchCode || "Unknown flock"} ·{" "}
+                        {record.flock?.batchCode || t("common.other", "Unknown flock")} ·{" "}
                         {new Date(record.date).toLocaleDateString()}
                       </span>
                     </div>
@@ -604,7 +641,7 @@ const ProductionHealthPage = () => {
                 ))}
 
                 {!loading && healthRecords.length === 0 && (
-                  <p className="loading-text">No health records yet.</p>
+                  <p className="loading-text">{t("productionHealth.noHealthRecords", "No health records yet.")}</p>
                 )}
               </div>
             )}
