@@ -193,6 +193,33 @@ const FlocksPage = () => {
     navigate("/login");
   };
 
+  return (
+    <main className="farm-dashboard">
+      <aside className="dashboard-sidebar">
+        <Link className="sidebar-brand" to="/dashboard">
+          FarmTrack
+        </Link>
+
+        <nav className="sidebar-nav">
+          <Link to="/dashboard">Overview</Link>
+
+          <Link className="active" to="/flocks">
+            Flock Management
+          </Link>
+
+          <Link to="/inventory">Feed & Inventory</Link>
+
+          {user?.role === "admin" && (
+  <Link to="/users">User Management</Link>
+)}
+
+        <Link to="//production-health">Production & Health</Link>
+
+          <Link className="active" to="/finance">
+          Finance & Analytics
+          </Link>
+
+        </nav>
   const getStatusDisplay = (status) => {
     if (status === "active") return t("common.active", "Active");
     if (status === "closed" || status === "culled")

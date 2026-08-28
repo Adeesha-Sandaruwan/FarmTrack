@@ -1,10 +1,13 @@
+```jsx
 import { Link, NavLink } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import LanguageToggle from "./LanguageToggle";
 
 const DashboardSidebar = ({ user, onLogout }) => {
   const { t } = useLanguage();
-  const navLinkClass = ({ isActive }) => (isActive ? "active" : undefined);
+
+  const navLinkClass = ({ isActive }) =>
+    isActive ? "active" : undefined;
 
   const getRoleDisplay = (role) => {
     if (role === "admin") return t("userManagement.admins", "Admin");
@@ -15,10 +18,12 @@ const DashboardSidebar = ({ user, onLogout }) => {
 
   return (
     <aside className="dashboard-sidebar">
+      {/* Brand */}
       <Link className="sidebar-brand" to="/dashboard">
         {t("nav.brand", "FarmTrack")}
       </Link>
 
+      {/* Navigation */}
       <nav className="sidebar-nav">
         <NavLink end className={navLinkClass} to="/dashboard">
           {t("nav.overview", "Overview")}
@@ -36,19 +41,23 @@ const DashboardSidebar = ({ user, onLogout }) => {
           {t("nav.productionHealth", "Production & Health")}
         </NavLink>
 
+        {/* User Management - Admin only */}
         {user?.role === "admin" && (
           <NavLink className={navLinkClass} to="/users">
             {t("nav.userManagement", "User Management")}
           </NavLink>
         )}
 
-        <span title={t("common.comingSoon", "Coming soon")}>
+        {/* Finance & Analytics - from finance branch */}
+        <NavLink className={navLinkClass} to="/finance">
           {t("nav.financeAnalytics", "Finance & Analytics")}
-        </span>
+        </NavLink>
       </nav>
 
+      {/* Logged-in User */}
       <div className="sidebar-user">
-        <strong>{user?.name}</strong>
+        <strong>{user?.name || "User"}</strong>
+
         <span>{getRoleDisplay(user?.role)}</span>
 
         <button type="button" onClick={onLogout}>
@@ -64,3 +73,4 @@ const DashboardSidebar = ({ user, onLogout }) => {
 };
 
 export default DashboardSidebar;
+```

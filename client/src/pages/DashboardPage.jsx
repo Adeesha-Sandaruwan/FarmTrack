@@ -1,3 +1,4 @@
+```jsx
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/api";
@@ -83,10 +84,20 @@ const DashboardPage = () => {
       <section className="dashboard-content">
         <header className="dashboard-header">
           <div>
-            <p className="eyebrow">{t("dashboard.title", "Farm overview")}</p>
-            <h1>{user?.farmName || t("dashboard.welcomeBack", "Your FarmTrack dashboard")}</h1>
+            <p className="eyebrow">
+              {t("dashboard.title", "Farm overview")}
+            </p>
+
+            <h1>
+              {user?.farmName ||
+                t("dashboard.welcomeBack", "Your FarmTrack dashboard")}
+            </h1>
+
             <p>
-              {t("dashboard.subtitle", "Monitor your flock, stock, production, and health records in one place.")}
+              {t(
+                "dashboard.subtitle",
+                "Monitor your flock, stock, production, and health records in one place."
+              )}
             </p>
           </div>
 
@@ -96,7 +107,9 @@ const DashboardPage = () => {
             onClick={loadDashboard}
             disabled={loading}
           >
-            {loading ? t("common.loading", "Refreshing...") : t("common.refresh", "Refresh data")}
+            {loading
+              ? t("common.loading", "Refreshing...")
+              : t("common.refresh", "Refresh data")}
           </button>
         </header>
 
@@ -104,14 +117,22 @@ const DashboardPage = () => {
 
         {loading && !overview ? (
           <section className="management-panel">
-            <p className="loading-text">{t("common.loading", "Loading your farm dashboard...")}</p>
+            <p className="loading-text">
+              {t("common.loading", "Loading your farm dashboard...")}
+            </p>
           </section>
         ) : (
           <>
             <section className="overview-kpi-grid">
               <article className="overview-kpi-card">
-                <span>{t("dashboard.activeFlocks", "Active flocks")}</span>
-                <strong>{formatNumber(kpis?.activeFlocks)}</strong>
+                <span>
+                  {t("dashboard.activeFlocks", "Active flocks")}
+                </span>
+
+                <strong>
+                  {formatNumber(kpis?.activeFlocks)}
+                </strong>
+
                 <p>
                   {formatNumber(kpis?.currentPopulation)}{" "}
                   {t("common.units", "birds currently")}
@@ -119,24 +140,53 @@ const DashboardPage = () => {
               </article>
 
               <article className="overview-kpi-card">
-                <span>{t("dashboard.eggProductionToday", "Eggs today")}</span>
-                <strong>{formatNumber(kpis?.totalEggsToday)}</strong>
+                <span>
+                  {t("dashboard.eggProductionToday", "Eggs today")}
+                </span>
+
+                <strong>
+                  {formatNumber(kpis?.totalEggsToday)}
+                </strong>
+
                 <p>
                   {formatNumber(kpis?.goodEggsToday)}{" "}
-                  {t("productionHealth.goodEggsCol", "good eggs recorded")}
+                  {t(
+                    "productionHealth.goodEggsCol",
+                    "good eggs recorded"
+                  )}
                 </p>
               </article>
 
               <article className="overview-kpi-card alert">
-                <span>{t("dashboard.dailyMortality", "Mortality this week")}</span>
-                <strong>{formatNumber(kpis?.mortalityThisWeek)}</strong>
-                <p>{kpis?.mortalityRate || 0}% {t("flocks.mortalityCol", "mortality rate")}</p>
+                <span>
+                  {t("dashboard.dailyMortality", "Mortality this week")}
+                </span>
+
+                <strong>
+                  {formatNumber(kpis?.mortalityThisWeek)}
+                </strong>
+
+                <p>
+                  {kpis?.mortalityRate || 0}%{" "}
+                  {t("flocks.mortalityCol", "mortality rate")}
+                </p>
               </article>
 
               <article className="overview-kpi-card">
-                <span>{t("dashboard.lowStockAlerts", "Low-stock alerts")}</span>
-                <strong>{formatNumber(kpis?.lowStockCount)}</strong>
-                <p>{t("dashboard.feedSuppliesWarning", "Items at or below reorder level")}</p>
+                <span>
+                  {t("dashboard.lowStockAlerts", "Low-stock alerts")}
+                </span>
+
+                <strong>
+                  {formatNumber(kpis?.lowStockCount)}
+                </strong>
+
+                <p>
+                  {t(
+                    "dashboard.feedSuppliesWarning",
+                    "Items at or below reorder level"
+                  )}
+                </p>
               </article>
             </section>
 
@@ -144,66 +194,145 @@ const DashboardPage = () => {
               <section className="management-panel">
                 <div className="panel-heading">
                   <div>
-                    <p className="eyebrow">{t("dashboard.quickActions", "Quick actions")}</p>
-                    <h2>{t("dashboard.title", "Farm operations")}</h2>
+                    <p className="eyebrow">
+                      {t("dashboard.quickActions", "Quick actions")}
+                    </p>
+
+                    <h2>
+                      {t("dashboard.title", "Farm operations")}
+                    </h2>
                   </div>
                 </div>
 
                 <div className="quick-action-grid">
-                  <Link className="quick-action-card" to="/flocks">
-                    <span>{t("nav.flocks", "Flock Management")}</span>
-                    <strong>{t("flocks.subtitle", "Add batches and mortality records")}</strong>
+                  <Link
+                    className="quick-action-card"
+                    to="/flocks"
+                  >
+                    <span>
+                      {t("nav.flocks", "Flock Management")}
+                    </span>
+
+                    <strong>
+                      {t(
+                        "flocks.subtitle",
+                        "Add batches and mortality records"
+                      )}
+                    </strong>
                   </Link>
 
-                  <Link className="quick-action-card" to="/inventory">
-                    <span>{t("nav.inventory", "Feed & Inventory")}</span>
-                    <strong>{t("inventory.subtitle", "Record feed usage and stock movement")}</strong>
+                  <Link
+                    className="quick-action-card"
+                    to="/inventory"
+                  >
+                    <span>
+                      {t("nav.inventory", "Feed & Inventory")}
+                    </span>
+
+                    <strong>
+                      {t(
+                        "inventory.subtitle",
+                        "Record feed usage and stock movement"
+                      )}
+                    </strong>
                   </Link>
 
-                  <Link className="quick-action-card" to="/production-health">
-                    <span>{t("nav.productionHealth", "Production & Health")}</span>
-                    <strong>{t("productionHealth.subtitle", "Record eggs, vaccinations, and treatments")}</strong>
+                  <Link
+                    className="quick-action-card"
+                    to="/production-health"
+                  >
+                    <span>
+                      {t(
+                        "nav.productionHealth",
+                        "Production & Health"
+                      )}
+                    </span>
+
+                    <strong>
+                      {t(
+                        "productionHealth.subtitle",
+                        "Record eggs, vaccinations, and treatments"
+                      )}
+                    </strong>
                   </Link>
 
-                  <div className="quick-action-card disabled">
-                    <span>{t("nav.financeAnalytics", "Finance & Analytics")}</span>
-                    <strong>{t("dashboard.comingSoonModule", "Coming soon")}</strong>
-                  </div>
+                  <Link
+                    className="quick-action-card"
+                    to="/finance"
+                  >
+                    <span>
+                      {t(
+                        "nav.financeAnalytics",
+                        "Finance & Analytics"
+                      )}
+                    </span>
+
+                    <strong>
+                      {t(
+                        "dashboard.financeAnalyticsDescription",
+                        "View farm financial records and analytics"
+                      )}
+                    </strong>
+                  </Link>
                 </div>
               </section>
 
               <section className="management-panel">
                 <div className="panel-heading">
                   <div>
-                    <p className="eyebrow">{t("productionHealth.title", "Health monitoring")}</p>
-                    <h2>{t("productionHealth.healthRecordsTitle", "Health alerts")}</h2>
+                    <p className="eyebrow">
+                      {t(
+                        "productionHealth.title",
+                        "Health monitoring"
+                      )}
+                    </p>
+
+                    <h2>
+                      {t(
+                        "productionHealth.healthRecordsTitle",
+                        "Health alerts"
+                      )}
+                    </h2>
                   </div>
 
                   <span className="role-note">
-                    {formatNumber(kpis?.healthAlertCount)} {t("common.pending", "urgent")}
+                    {formatNumber(kpis?.healthAlertCount)}{" "}
+                    {t("common.pending", "urgent")}
                   </span>
                 </div>
 
                 {overview?.healthAlerts?.length ? (
                   <div className="health-list">
                     {overview.healthAlerts.map((record) => (
-                      <article className="health-list-item" key={record._id}>
+                      <article
+                        className="health-list-item"
+                        key={record._id}
+                      >
                         <div>
                           <strong>{record.title}</strong>
+
                           <span>
-                            {record.flock?.batchCode || t("common.other", "Unknown flock")} ·{" "}
-                            {formatDate(record.date)}
+                            {record.flock?.batchCode ||
+                              t("common.other", "Unknown flock")}{" "}
+                            · {formatDate(record.date)}
                           </span>
                         </div>
 
-                        <span className={`severity-badge ${record.severity}`}>
+                        <span
+                          className={`severity-badge ${record.severity}`}
+                        >
                           {record.severity}
                         </span>
                       </article>
                     ))}
                   </div>
                 ) : (
-                  <p className="loading-text">{t("dashboard.allStockHealthy", "No high-priority health alerts.")}</p>
+                  <p className="loading-text">
+                    {t(
+                      "dashboard.allStockHealthy",
+                      "No high-priority health alerts."
+                    )}
+                  </p>
                 )}
               </section>
             </section>
@@ -212,30 +341,55 @@ const DashboardPage = () => {
               <section className="management-panel">
                 <div className="panel-heading">
                   <div>
-                    <p className="eyebrow">{t("inventory.title", "Stock control")}</p>
-                    <h2>{t("inventory.lowStockItems", "Low-stock items")}</h2>
+                    <p className="eyebrow">
+                      {t("inventory.title", "Stock control")}
+                    </p>
+
+                    <h2>
+                      {t(
+                        "inventory.lowStockItems",
+                        "Low-stock items"
+                      )}
+                    </h2>
                   </div>
 
-                  <Link className="small-page-link" to="/inventory">
-                    {t("inventory.inventoryListTitle", "Open inventory")}
+                  <Link
+                    className="small-page-link"
+                    to="/inventory"
+                  >
+                    {t(
+                      "inventory.inventoryListTitle",
+                      "Open inventory"
+                    )}
                   </Link>
                 </div>
 
                 {overview?.lowStockItems?.length ? (
                   <div className="dashboard-list">
                     {overview.lowStockItems.map((item) => (
-                      <article className="dashboard-list-item" key={item._id}>
+                      <article
+                        className="dashboard-list-item"
+                        key={item._id}
+                      >
                         <div>
                           <strong>{item.name}</strong>
-                          <span className="capitalize">{item.category}</span>
+                          <span className="capitalize">
+                            {item.category}
+                          </span>
                         </div>
 
                         <div className="stock-amount">
                           <strong>
-                            {formatNumber(item.currentStock)} {item.unit}
+                            {formatNumber(item.currentStock)}{" "}
+                            {item.unit}
                           </strong>
+
                           <span>
-                            {t("inventory.minAlertCol", "Reorder at")} {formatNumber(item.reorderLevel)}{" "}
+                            {t(
+                              "inventory.minAlertCol",
+                              "Reorder at"
+                            )}{" "}
+                            {formatNumber(item.reorderLevel)}{" "}
                             {item.unit}
                           </span>
                         </div>
@@ -244,7 +398,10 @@ const DashboardPage = () => {
                   </div>
                 ) : (
                   <p className="loading-text">
-                    {t("dashboard.allStockHealthy", "All inventory items are above their reorder levels.")}
+                    {t(
+                      "dashboard.allStockHealthy",
+                      "All inventory items are above their reorder levels."
+                    )}
                   </p>
                 )}
               </section>
@@ -252,34 +409,66 @@ const DashboardPage = () => {
               <section className="management-panel">
                 <div className="panel-heading">
                   <div>
-                    <p className="eyebrow">{t("productionHealth.eventVaccination", "Vaccination planner")}</p>
-                    <h2>{t("productionHealth.healthRecordsTitle", "Due in the next 7 days")}</h2>
+                    <p className="eyebrow">
+                      {t(
+                        "productionHealth.eventVaccination",
+                        "Vaccination planner"
+                      )}
+                    </p>
+
+                    <h2>
+                      {t(
+                        "productionHealth.healthRecordsTitle",
+                        "Due in the next 7 days"
+                      )}
+                    </h2>
                   </div>
 
-                  <Link className="small-page-link" to="/production-health">
-                    {t("productionHealth.title", "Open health records")}
+                  <Link
+                    className="small-page-link"
+                    to="/production-health"
+                  >
+                    {t(
+                      "productionHealth.title",
+                      "Open health records"
+                    )}
                   </Link>
                 </div>
 
                 {overview?.upcomingVaccinations?.length ? (
                   <div className="dashboard-list">
                     {overview.upcomingVaccinations.map((record) => (
-                      <article className="dashboard-list-item" key={record._id}>
+                      <article
+                        className="dashboard-list-item"
+                        key={record._id}
+                      >
                         <div>
                           <strong>{record.title}</strong>
-                          <span>{record.flock?.batchCode || t("common.other", "Unknown flock")}</span>
+
+                          <span>
+                            {record.flock?.batchCode ||
+                              t("common.other", "Unknown flock")}
+                          </span>
                         </div>
 
                         <div className="stock-amount">
-                          <strong>{formatDate(record.nextDueDate)}</strong>
-                          <span>{t("common.date", "Next due date")}</span>
+                          <strong>
+                            {formatDate(record.nextDueDate)}
+                          </strong>
+
+                          <span>
+                            {t("common.date", "Next due date")}
+                          </span>
                         </div>
                       </article>
                     ))}
                   </div>
                 ) : (
                   <p className="loading-text">
-                    {t("productionHealth.noHealthRecords", "No vaccinations or treatments are due in the next 7 days.")}
+                    {t(
+                      "productionHealth.noHealthRecords",
+                      "No vaccinations or treatments are due in the next 7 days."
+                    )}
                   </p>
                 )}
               </section>
@@ -288,8 +477,16 @@ const DashboardPage = () => {
             <section className="management-panel">
               <div className="panel-heading">
                 <div>
-                  <p className="eyebrow">{t("dashboard.title", "Farm timeline")}</p>
-                  <h2>{t("dashboard.recentActivity", "Recent activity")}</h2>
+                  <p className="eyebrow">
+                    {t("dashboard.title", "Farm timeline")}
+                  </p>
+
+                  <h2>
+                    {t(
+                      "dashboard.recentActivity",
+                      "Recent activity"
+                    )}
+                  </h2>
                 </div>
               </div>
 
@@ -313,7 +510,10 @@ const DashboardPage = () => {
                 </div>
               ) : (
                 <div className="empty-state">
-                  <h3>{t("common.noData", "No farm activity yet")}</h3>
+                  <h3>
+                    {t("common.noData", "No farm activity yet")}
+                  </h3>
+
                   <p>
                     {t(
                       "dashboard.noActiveFlocks",
@@ -331,3 +531,4 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
+```
