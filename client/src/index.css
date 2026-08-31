@@ -715,7 +715,7 @@ button:disabled {
 
 .summary-card strong {
   color: #133e27;
-  font-size: clamp(1.75rem, 3vw, 2.45rem);
+  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
 }
 
 .mortality-card strong {
