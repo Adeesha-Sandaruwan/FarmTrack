@@ -1,10 +1,10 @@
-```jsx
 import { Link, NavLink } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import LanguageToggle from "./LanguageToggle";
 
 const DashboardSidebar = ({ user, onLogout }) => {
   const { t } = useLanguage();
+  const isAdmin = user?.role === "admin";
 
   const navLinkClass = ({ isActive }) =>
     isActive ? "active" : undefined;
@@ -25,33 +25,33 @@ const DashboardSidebar = ({ user, onLogout }) => {
 
       {/* Navigation */}
       <nav className="sidebar-nav">
-        <NavLink end className={navLinkClass} to="/dashboard">
-          {t("nav.overview", "Overview")}
-        </NavLink>
-
-        <NavLink className={navLinkClass} to="/flocks">
-          {t("nav.flocks", "Flock Management")}
-        </NavLink>
-
-        <NavLink className={navLinkClass} to="/inventory">
-          {t("nav.inventory", "Feed & Inventory")}
-        </NavLink>
-
-        <NavLink className={navLinkClass} to="/production-health">
-          {t("nav.productionHealth", "Production & Health")}
-        </NavLink>
-
-        {/* User Management - Admin only */}
-        {user?.role === "admin" && (
+        {isAdmin ? (
           <NavLink className={navLinkClass} to="/users">
             {t("nav.userManagement", "User Management")}
           </NavLink>
-        )}
+        ) : (
+          <>
+            <NavLink end className={navLinkClass} to="/dashboard">
+              {t("nav.overview", "Overview")}
+            </NavLink>
 
-        {/* Finance & Analytics - from finance branch */}
-        <NavLink className={navLinkClass} to="/finance">
-          {t("nav.financeAnalytics", "Finance & Analytics")}
-        </NavLink>
+            <NavLink className={navLinkClass} to="/flocks">
+              {t("nav.flocks", "Flock Management")}
+            </NavLink>
+
+            <NavLink className={navLinkClass} to="/inventory">
+              {t("nav.inventory", "Feed & Inventory")}
+            </NavLink>
+
+            <NavLink className={navLinkClass} to="/production-health">
+              {t("nav.productionHealth", "Production & Health")}
+            </NavLink>
+
+            <NavLink className={navLinkClass} to="/finance">
+              {t("nav.financeAnalytics", "Finance & Analytics")}
+            </NavLink>
+          </>
+        )}
       </nav>
 
       {/* Logged-in User */}
@@ -60,7 +60,7 @@ const DashboardSidebar = ({ user, onLogout }) => {
 
         <span>{getRoleDisplay(user?.role)}</span>
 
-        <button type="button" onClick={onLogout}>
+        <button className="signout-button" type="button" onClick={onLogout}>
           {t("common.signOut", "Sign out")}
         </button>
 
@@ -73,4 +73,3 @@ const DashboardSidebar = ({ user, onLogout }) => {
 };
 
 export default DashboardSidebar;
-```

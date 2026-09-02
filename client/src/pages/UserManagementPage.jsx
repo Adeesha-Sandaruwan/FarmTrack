@@ -391,7 +391,11 @@ const UserManagementPage = () => {
                         <td>
                           <div className="user-actions">
                             <button
-                              className="table-action"
+                              className={`table-action user-action-button ${
+                                selectedUser.isActive
+                                  ? "deactivate-action"
+                                  : "activate-action"
+                              }`}
                               type="button"
                               onClick={() => handleToggleActive(selectedUser)}
                               disabled={isCurrentUser}
@@ -402,7 +406,7 @@ const UserManagementPage = () => {
                             </button>
 
                             <button
-                              className="table-action danger-action"
+                              className="table-action user-action-button danger-action"
                               type="button"
                               onClick={() => handleDelete(selectedUser)}
                               disabled={isCurrentUser}
