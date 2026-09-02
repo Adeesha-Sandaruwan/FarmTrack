@@ -184,32 +184,6 @@ const InventoryPage = () => {
 
   return (
     <main className="farm-dashboard">
-      <aside className="dashboard-sidebar">
-        <Link className="sidebar-brand" to="/dashboard">
-          FarmTrack
-        </Link>
-
-        <nav className="sidebar-nav">
-          <Link to="/dashboard">Overview</Link>
-          <Link to="/flocks">Flock Management</Link>
-          <Link className="active" to="/inventory">
-            Feed & Inventory
-          </Link>
-          {user?.role === "admin" && (
-         <Link to="/users">User Management</Link>
-)}
-          <Link to="/production-health">production-health</Link>
-          <Link to="/finance">Finance & Analytics</Link>
-        </nav>
-
-        <div className="sidebar-user">
-          <strong>{user?.name}</strong>
-          <span>{user?.role}</span>
-          <button type="button" onClick={handleLogout}>
-            Sign out
-          </button>
-        </div>
-      </aside>
       <DashboardSidebar user={user} onLogout={handleLogout} />
 
       <section className="dashboard-content">

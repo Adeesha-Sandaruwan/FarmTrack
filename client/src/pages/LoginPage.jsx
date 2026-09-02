@@ -29,8 +29,8 @@ const LoginPage = () => {
     setSubmitting(true);
 
     try {
-      await login(formData);
-      navigate("/dashboard");
+      const session = await login(formData);
+      navigate(session.user?.role === "admin" ? "/users" : "/dashboard");
     } catch {
       setError(t("auth.invalidCredentials", "Invalid email or password. Please try again."));
     } finally {
@@ -105,7 +105,7 @@ const LoginPage = () => {
             {t("auth.forgotPassword", "Forgot password? Coming soon.")}
           </p>
 
-          <button type="submit" disabled={submitting}>
+          <button className="auth-submit" type="submit" disabled={submitting}>
             {submitting
               ? t("auth.signingIn", "Signing in...")
               : t("auth.signIn", "Sign in")}
